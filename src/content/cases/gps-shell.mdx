@@ -1,0 +1,214 @@
+---
+slug: "gps-shell"
+title: "GoPlus Security & MyShell (GPS / SHELL)"
+tokenSymbol: "GPS / SHELL"
+incidentDate: "2025-03-09"
+publishedDate: "2026-05-12"
+status: "documented"
+severity: "critical"
+patterns:
+  - "direct-dump"
+metrics:
+  maxDrawdown: -0.95
+exchanges:
+  binanceSpot: true
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["bitget", "gate", "okx"]
+allegations:
+  - source: "Binance 공식"
+    sourceUrl: "https://www.binance.com/en/support/announcement/"
+    date: "2025-03-09"
+    summary: "마켓메이커의 21시간 일방 매도(7,000만 GPS, 약 $5M 부당이익)를 확인. 해당 마켓메이커 영구 차단 · 부당이익 동결 · 사용자 보상 절차를 공식 발표."
+  - source: "BeInCrypto"
+    sourceUrl: "https://beincrypto.com/binance-market-maker-ban-gps-shell/"
+    date: "2025-03-09"
+    summary: "Binance 가 GPS · SHELL 에 연관된 마켓메이커의 misconduct 를 발견하고 영구 차단 조치를 취했다고 보도."
+  - source: "ChainCatcher"
+    sourceUrl: "https://www.chaincatcher.com/en/article/2171684"
+    date: "2025-03-10"
+    summary: "Web3Port / Whisper 운영 구조 분석 — 인큐베이터로 가장해 무상 토큰을 수령하고, 자회사 마켓메이커가 매도 채널 역할을 한 정황을 정리."
+relatedCases: ["rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { Web3PortFlow } from '@/components/web3port-flow'
+import { ZoomableImage } from '@/components/zoomable-image'
+import gpsPriceSpot from '@/assets/cases/gps-shell/gps-price-spot.png'
+import shellPriceSpot from '@/assets/cases/gps-shell/shell-price-spot.png'
+
+## 개요
+
+GPS 와 SHELL 은 같은 마켓메이커(Web3Port 산하 Whisper)에 의해 같은 방식으로 처리된 두 토큰입니다. 바이낸스는 2025년 3월 9일 공식 발표를 통해, 해당 마켓메이커가 매수 호가 의무를 이행하지 않고 21시간 동안 7,000만 GPS 를 일방 매도해 약 $5M 의 부당이익을 챙겼다고 확인했습니다. 거래소가 마켓메이커를 영구 차단하고 부당이익을 압류, 영향 받은 사용자 보상까지 발표한 매우 드문 **documented** 케이스입니다.
+
+> "21시간 내 매수 의무를 전혀 이행하지 않고 매도만 실행, 7천만 GPS 토큰을 던져 약 $5M 수익을 얻었다."
+> — Binance 공식 발표 (2025.03.09)
+
+이 케이스의 교훈은 **마켓메이커 자체가 manipulation 도구로 변질될 수 있다**는 점입니다. RAVE 같은 정교한 short squeeze 셋업이 아니라, "양방향 호가" 라는 정상적 역할의 외피를 쓴 일방적 매도가 어떻게 작동하는지를 보여줍니다.
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 2월 27일 — SHELL 바이낸스 현물 상장">
+MyShell 이 바이낸스 현물에 상장 (SHELL/USDT). 상장 직후 첫 캔들에서 매도세가 즉시 시작됨.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 4일 — GPS 바이낸스 현물 상장">
+GoPlus Security 가 바이낸스 현물에 상장 (GPS/USDT). 상장 전후 Web3Port 를 통한 인큐베이션과 자회사 격인 Whisper 의 마켓메이킹이 진행되었다고 업계 분석가들이 보고.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 — 상장 직후 21시간 (GPS 기준)">
+Whisper 로 분류된 거래소 계정이 GPS 7,000만 토큰을 매수 호가 없이 일방 매도. 일봉 차트상 상장 첫 캔들 직후 $0.14 부근 → $0.04 부근으로 -71% 단기 폭락. SHELL 에서도 같은 시기 유사 패턴 매도가 지속됨.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 9일">
+**Binance 공식 발표** — 마켓메이커의 misconduct 확인, 해당 계정 영구 차단. 약 $5M+ 부당이익 동결. GPS · SHELL 영향 받은 사용자 보상 계획 발표.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 10일 이후">
+X 분석 계정들 (@ab_kuai_dong, @yuyue_chris 등) 이 Web3Port / Whisper / Spark Digital Capital 의 연결 구조를 공개. 동일 운영 모델이 다수 프로젝트에 적용되었을 가능성을 제기.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 3월 ~ 이후">
+MyShell 이 Web3Port 와의 직접 자본 관계는 부인하나, 마켓메이킹 위탁 사실 자체는 부인하지 않음. 동일 마켓메이커를 사용했다고 *알려진* 다른 프로젝트들에 대한 후속 조사 우려가 시장에서 제기됨.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조 — 마켓메이커의 무상 토큰 경로
+
+### GPS / SHELL 핵심 수치 비교
+
+| 항목 | GPS | SHELL |
+|------|-----|-------|
+| 마켓메이커 매도 기간 | 21시간 | 지속적 |
+| 매도 토큰 수량 | 7,000만 | 미공개 |
+| 마켓메이커 부당이익 (Binance 공식) | ~$5M | 미공개 |
+| 일봉 첫 캔들 하락 | $0.14 부근 → $0.04 부근 | $0.60 부근 → $0.30 부근 |
+| 상장 후 누적 하락 (현재까지) | -95% (현재 ~$0.0077) | -93% (현재 ~$0.0422) |
+| 공통 마켓메이커 | Web3Port / Whisper | Web3Port / Whisper |
+| 공통 VC (Cryptorank) | YZi Labs · OKX Ventures · HashKey | YZi Labs · OKX Ventures · HashKey |
+
+두 토큰의 펀더멘털, 사용자 베이스, 출시 시점은 모두 다릅니다. 그럼에도 **같은 기간 가격 차트의 모양이 거울처럼 일치**한다는 점은, organic 한 시장의 가격 발견이 아닌 단일 entity 의 동일 알고리즘이 두 자산을 동시에 처리했다는 정황으로 해석됩니다 (업계 분석가 다수의 평가).
+
+### 무상 토큰 수령 → 매도 채널 구조 (분석가의 주장)
+
+X 분석 계정 [@ab_kuai_dong](https://x.com/ab_kuai_dong) 등이 정리한 Web3Port 의 운영 모델 *(바이낸스의 공식 차단 조치는 사실이며, 아래 운영 구조 세부는 분석가의 unverified claim 임을 명시)*:
+
+1. **Spark Digital Capital 시대 — VC 위장.** 상하이 기반 펀드. 자본 투입 없이 무상 토큰을 수령하고, 후속 VC 들을 exit liquidity 로 활용했다고 알려짐.
+2. **Web3Port 시대 — 서비스 대가 무상 토큰.** VC 시장이 포화되자 2021-2022년경 인큐베이터로 전환. 프로젝트 인큐베이션 명목으로 **공급의 1-3%** 를 무상 수령.
+3. **Whisper 시대 — 현금화 채널.** 받은 토큰을 처분할 venue 가 필요해지자 마켓메이커 Whisper 를 설립. 거래소 상장과 동시에 일방 매도가 가능한 권한 구조.
+
+> "프로젝트팀은 '인쇄기'이고, 마켓메이커는 그 토큰을 현금화해주고 합의된 비율로 수익을 나누는 역할이다. 이 이해관계 구속 때문에, 마켓메이커가 프로젝트팀의 의사를 거스르고 임의로 토큰을 던질 가능성은 매우 낮다."
+> — @yuyue_chris, ChainCatcher 인용
+
+### Web3Port 가 마켓메이킹을 제공했다고 *알려진* 다른 프로젝트들
+
+| 프로젝트 | 분야 | 비고 |
+|---------|------|------|
+| Aethir | Decentralized cloud (AI / 게이밍) | — |
+| dappOS | Web3 OS | — |
+| Lumoz | Layer 2 (zkRollup) | — |
+| Mind Network | Decentralized AI | — |
+| Movement | High-performance L2 | 2025년 별도 manipulation 의혹 (MOVE 케이스) |
+| Puffer | Liquid staking | — |
+| Polyhedra | Cross-chain | — |
+
+이 표는 해당 프로젝트들이 Web3Port 의 마켓메이킹 서비스를 사용했다고 *알려진* 사실만을 정리한 것입니다. GPS / SHELL 과 같은 misconduct 가 있었음을 시사하지 않습니다.
+
+## 수법 분석 — "일방적 마켓메이킹"
+
+정상적 마켓메이커의 역할은 매수 · 매도 양방향 호가를 동시에 제공해 시장 유동성을 만들고, 그 대가로 spread 수익을 챙기는 것입니다. Binance 가 발표한 misconduct 의 본질은 이 역할이 한 방향(매도)으로만 작동했다는 점입니다.
+
+### 1단계 — 토큰 무상 수령
+
+인큐베이터 또는 VC 를 가장해 프로젝트로부터 **공급의 1-3% 를 무상 토큰으로 수령**. 마켓메이킹 서비스 제공의 대가라는 명분.
+
+### 2단계 — 자회사 마켓메이커로 이관
+
+받은 무상 토큰을 자회사 격인 Whisper(마켓메이커) 계정으로 이관. 거래소 내부에서 직접 대량 매도가 가능한 권한 구조.
+
+### 3단계 — 매수 호가 미이행 · 일방 매도
+
+마켓메이킹이라는 명분 아래 **매수 호가는 거의 깔지 않고 매도만 지속**. Binance 공식 발표에 따르면 GPS 의 경우 21시간 동안 매수 의무가 전혀 이행되지 않았습니다.
+
+### 4단계 — 수익 분배
+
+매도 수익을 프로젝트팀과 사전 합의된 비율로 분배 (분석가의 주장). 프로젝트팀은 토큰 발행, 마켓메이커는 현금화 채널.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption="4단계 흐름 — 프로젝트가 무상 토큰을 Web3Port 에 양도, 자회사 Whisper 가 마켓메이커 명목으로 받은 토큰을 Binance Spot 에서 매도, 수익을 프로젝트팀과 재분배. ③→④ 단계만 Binance 공식 발표로 documented (GPS 7천만 토큰 · 21h · ~$5M). 나머지 단계 및 분배 비율은 ChainCatcher · 분석가 주장."
+  source="Binance 공식 발표 (2025.03.09) · ChainCatcher 분석"
+  aspect="square"
+>
+  <Web3PortFlow />
+</ChartFrame>
+
+## 데이터
+
+<ChartFrame
+  kind="PRICE · GPS · 1D"
+  caption="GPS / USDT 바이낸스 현물 일봉, 2025.03 상장 ~ 2026.05. 첫 캔들 직후 21시간 일방 매도로 $0.14 부근 → $0.04 부근 (-71%). 이후 회복 없이 추가 하락이 이어져 현재 $0.0077 부근. 차트 클릭 시 확대."
+  source="Binance Spot · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={gpsPriceSpot} alt="GPS/USDT 바이낸스 현물 일봉 (2025.03 상장 ~ 2026.05)" />
+</ChartFrame>
+
+<ChartFrame
+  kind="PRICE · SHELL · 1D"
+  caption="SHELL / USDT 바이낸스 현물 일봉, 2025.02 ~ 2026.05. 좌측 첫 구간 $0.60 부근 → $0.30 부근 1차 매도, 이후 지속 하향. 현재 $0.0422 부근. GPS 차트와 비교 시 같은 시기 동일 알고리즘 매도의 흔적이 보임 (분석가 다수의 평가). 차트 클릭 시 확대."
+  source="Binance Spot · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={shellPriceSpot} alt="SHELL/USDT 바이낸스 현물 일봉 (2025.02 ~ 2026.05)" />
+</ChartFrame>
+
+### Binance 의 대응
+
+| 조치 | 내용 |
+|------|------|
+| 마켓메이커 영구 차단 | Web3Port / Whisper 의 바이낸스 계정 차단 |
+| 부당이익 동결 | 약 $5M+ 의 매도 수익 압류 |
+| 사용자 보상 | 압류한 수익으로 GPS · SHELL 보유자 보상 계획 발표 |
+| MM 기준 강화 | spread 안정성, 적정 주문 규모, manipulation 금지 명시 |
+
+거래소가 마켓메이커 misconduct 를 공식 인정하고 부당이익 압류 · 사용자 보상까지 진행한 매우 드문 사례입니다. 대부분의 manipulation 케이스에서 거래소는 침묵하거나 모호한 입장만 발표합니다.
+
+## 교훈 — 다음 비슷한 케이스를 식별하는 시그널
+
+이 케이스에서 트레이더가 추출할 수 있는 위험 지표들. 단일 항목으로는 약하지만 **3개 이상 겹치면 강한 경고 신호**입니다.
+
+### 마켓메이커 시그널
+
+- 단일 마켓메이커가 다수 토큰의 유동성을 담당 — 한 곳에서 문제가 발생하면 동시 다발 사고
+- 공시 안 된 마켓메이커 계약 — 정상이라면 분기별 활동 보고가 공개되어야 함
+- 같은 entity 가 인큐베이터 · VC · 마켓메이커 역할을 동시에 수행 (구조적 이해상충)
+
+### 가격 차트 시그널
+
+- 상장 직후 일방적 하락 — 매수 호가 없이 매도만 이어지는 호가창
+- 계단식 매도 (stair-step decline) — 알고리즘 매도의 특징적 패턴
+- 같은 시기 다른 토큰과 차트 모양이 일치 — 동일 마켓메이커 운영 가능성
+
+### 투자자 / VC 네트워크 시그널
+
+- 같은 VC 가 다수의 의심 토큰에 동시에 투자 — GPS / SHELL / RAVE 모두 YZi Labs · OKX Ventures · HashKey 가 명단에 등장
+- 거래소 관계사 VC 가 토큰을 보유 — 정보 비대칭 가능성. 해당 VC 들의 위법 가담을 의미하지 않으며, surveillance 와 가까운 portfolio 라는 의미
+
+### 거래소 상장 패턴 시그널
+
+- 상장 시점과 마켓메이킹 위탁 시점이 매우 가까움 — 적절한 인수인계 시간 부족
+- 상장 후 첫 24-48시간 거래량이 비정상 — 마켓메이커의 wash trading 가능성
+
+## 산업적 시사점
+
+1. **마켓메이커가 manipulation 도구로 변질 가능.** "유동성 제공" 이라는 정상적 역할이 "무상 토큰 처분 채널" 로 작동할 수 있다는 사실이 거래소 공식 발표로 확인됨.
+2. **거래소도 reactive 책임.** Binance 의 사후 조치는 환영하나, Web3Port 의 운영 패턴이 다년간 누적된 뒤에야 작동했다는 점은 사전 모니터링의 한계를 보여줌.
+3. **VC · 인큐베이터 · 마켓메이커의 분리 필요.** 같은 entity 가 세 역할을 모두 수행하면 구조적 이해상충이 발생함.
+4. **거래소 관계사 VC 포트폴리오를 주의 깊게 본다.** 이는 그 VC 들의 위법 가담을 의미하지 않으며, 그들의 portfolio 가 거래소 surveillance 와 인접한 위치에 있다는 의미.
+
+## 출처
+
+1. **Binance 공식 발표 (2025.03.09)** — 마켓메이커 차단 + 부당이익 압류 + 사용자 보상
+2. **BeInCrypto** — ["Binance Bans Mystery Market Maker for GPS and SHELL Over Misconduct"](https://beincrypto.com/binance-market-maker-ban-gps-shell/)
+3. **ChainCatcher** — ["Behind the collapse of GPS and SHELL: A complete operational chain"](https://www.chaincatcher.com/en/article/2171684)
+4. **Coinfomania** — ["GPS & SHELL Controversy: What Binance's Investigation Revealed"](https://coinfomania.com/gps-shell-controversy-what-binances-investigation-revealed/)
+5. **AInvest** — ["Binance Bans Market Maker, Seizes Profits from GPS, SHELL"](https://www.ainvest.com/news/binance-bans-market-maker-seizes-profits-gps-shell-2503/)
+6. **Yellow.com** — ["Binance Bans Mystery Market Maker, Seizes Profits Over Token Manipulation"](https://yellow.com/news/binance-bans-mystery-market-maker-seizes-profits-over-token-manipulation)
