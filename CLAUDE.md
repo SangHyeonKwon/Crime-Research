@@ -103,15 +103,19 @@
 │   │   └── about.tsx            # 사이트 목적, 방법론
 │   │
 │   ├── components/
-│   │   ├── ui/                  # shadcn primitives
-│   │   ├── case-card.tsx
-│   │   ├── case-image.tsx       # 정적 이미지 + 캡션 + 출처
-│   │   ├── supply-bar.tsx       # 공급 집중도 막대 (SVG)
-│   │   ├── timeline-list.tsx
-│   │   ├── pattern-badge.tsx
-│   │   ├── source-citation.tsx
-│   │   ├── disclaimer.tsx
-│   │   └── layout.tsx
+│   │   ├── ui/                  # shadcn primitives (현재 비어있음)
+│   │   ├── case-card.tsx        # 홈 그리드 카드
+│   │   ├── case-hero.tsx        # /cases/:slug 상단 hero + stat strip
+│   │   ├── case-image.tsx       # 정적 이미지 + 캡션 (lightbox 필요하면 zoomable-image 사용)
+│   │   ├── case-timeline.tsx    # <Timeline> / <TimelineEvent date="...">
+│   │   ├── chart-frame.tsx      # 차트/이미지/placeholder 슬롯 통일 wrapper (kind/caption/source/aspect)
+│   │   ├── fund-flow.tsx        # 자금 흐름 SVG 다이어그램
+│   │   ├── long-short-ratio.tsx # Long/Short Ratio SVG 라인차트
+│   │   ├── supply-bars.tsx      # 공급 집중도 가로 막대 (HTML/CSS, props 데이터)
+│   │   ├── pattern-badge.tsx    # 패턴 태그 chip
+│   │   ├── zoomable-image.tsx   # 클릭 시 React Portal lightbox 확대 (ESC/backdrop close)
+│   │   ├── disclaimer.tsx       # 법적 면책 (footer 자동 삽입)
+│   │   └── layout.tsx           # 헤더(테마 토글 포함) + 푸터
 │   │
 │   ├── content/
 │   │   └── cases/
@@ -123,10 +127,11 @@
 │   │       └── b3.mdx
 │   │
 │   ├── lib/
-│   │   ├── cases.ts             # MDX 임포트 + frontmatter 검증
+│   │   ├── cases.ts             # import.meta.glob('../content/cases/*.mdx') + zod 검증 + getCase(slug)
 │   │   ├── schema.ts            # zod 스키마
-│   │   ├── types.ts
-│   │   └── utils.ts
+│   │   ├── types.ts             # frontmatter 타입 (z.infer)
+│   │   ├── utils.ts             # cn() helper (clsx + tailwind-merge)
+│   │   └── mdx-components.tsx   # MDX HTML 요소 (h2/h3/p/ul/table/blockquote/a/code 등) 사이트 톤 매핑
 │   │
 │   └── assets/
 │       └── cases/
@@ -158,6 +163,8 @@ React 컴포넌트에서 렌더
 ```
 
 모든 케이스는 빌드 타임에 번들에 포함. 런타임 fetch 없음.
+
+시각 컴포넌트(`SupplyBars`, `FundFlow` 등) 의 props 데이터는 MDX 파일 안에 `export const X = [...]` 형태로 인라인 거주. zod 검증 대상은 frontmatter 만이고, 인라인 데이터는 케이스 콘텐츠의 일부로 함께 관리.
 
 ---
 
@@ -214,10 +221,12 @@ pnpm check-links
 
 ### 배포
 
-- **Cloudflare Pages 추천** (무료, CDN 빠름)
-- `main` 푸시 → 자동 배포
-- PR 프리뷰 자동 생성
-- `dist/` 폴더가 배포 대상
+- **Railway** (Nixpacks 빌더)
+- `main` 푸시 → 자동 재배포
+- Build: `pnpm install --frozen-lockfile && pnpm build` (`nixpacks.toml` 명시)
+- Start: `pnpm start` → `serve -s dist` — SPA fallback 포함, Railway의 `PORT` env 자동 인식
+- `dist/` 폴더가 배포 산출물
+- Conductor 워크스페이스 환경에서는 `main` 이 부모 worktree 에 잡혀있어 이 workspace 에서 직접 체크아웃 불가. 푸시는 `git push origin <branch>:main` 으로 fast-forward.
 
 ### 테스트 정책
 
@@ -280,12 +289,16 @@ patterns:
   - supply-concentration
   - alpha-no-spot
 metrics:
+  startPrice: 0.25                    # 펌프 시작 가격 (optional)
   peakPrice: 27.94
   bottomPrice: 0.50
-  maxDrawdown: -0.95
+  maxGain: 103.83                     # 비율 (103.83 = +10,383%)
+  maxDrawdown: -0.95                  # 비율 (-0.95 = -95%)
   marketCapPeak: 6000000000
+  marketCapEvaporated: 5700000000     # 피크 → 바닥 사이 증발한 시총
   pumpDurationDays: 9
   crashDurationHours: 24
+  liquidationVolume24h: 44000000      # 24h 강제청산액 (USD)
 exchanges:
   binanceSpot: false
   binanceAlpha: true
@@ -322,6 +335,36 @@ relatedCases: [lab, siren]
 5. **데이터** — 가격 차트 이미지, 거래량/OI 스크린샷
 6. **교훈** — 트레이더가 이 케이스에서 배울 수 있는 risk indicator
 7. **출처** — 모든 인용 링크
+
+### 7개 섹션을 어떤 컴포넌트로 렌더하나
+
+| 섹션 | 도구 |
+|------|------|
+| 개요 | 평문 (h2 + p) + `blockquote` 큰 인용 |
+| 타임라인 | `<Timeline><TimelineEvent date="...">` (수직 라인 + 점 마커) |
+| 공급 구조 | markdown 표 (거래소 상장 여부) + `<ChartFrame><SupplyBars rows={...} asOf="..." /></ChartFrame>` |
+| 수법 분석 | h3 + 평문 + `<ChartFrame kind="FUND FLOW" aspect="square"><FundFlow /></ChartFrame>` |
+| 데이터 | `<ChartFrame>` 시리즈 — 캔들/스크린샷은 `<ZoomableImage src={import...} />`, 파생 metric 은 SVG 차트(`<LongShortRatio />` 등), 데이터 없음은 children 없이 placeholder |
+| 교훈 | h3 (시그널 카테고리) + 불릿 리스트 |
+| 출처 | 번호 리스트 + 외부 링크 |
+
+표/리스트/인용 등 HTML 요소는 `src/lib/mdx-components.tsx` 매핑으로 사이트 톤으로 재스타일링. `@tailwindcss/typography` 의 `.prose` 클래스는 case detail 에서 안 씀 (매핑이 더 정확하고 일관됨).
+
+### 차트 vs 이미지 정책
+
+데이터 시각화 결정 트리:
+
+1. **자체 SVG 컴포넌트** — 데이터가 정량적이고 재사용 가치가 있는 경우. 컬러 톤 일관성, 다크/라이트 자동 전환.
+   - `<SupplyBars>` (공급 분포), `<FundFlow>` (자금 흐름), `<LongShortRatio>` (파생 metric)
+   - 새 차트 추가 시 같은 패턴 따름 (`viewBox` + Tailwind `fill-ink-*` / `stroke-ink-*`)
+
+2. **로컬 호스트 이미지** — 캔들 차트처럼 다중 패널/복잡 인디케이터가 필요한 경우. TradingView/Coinglass/Etherscan 캡처 → `src/assets/cases/<slug>/` 에 저장 → `<ZoomableImage>` 로 wrap (클릭 확대).
+   - **외부 hotlink 절대 금지** (절대 규칙 10).
+   - 캡션에 원 출처 명시.
+
+3. **데이터 없음 / 작업 중** — `<ChartFrame kind="..." caption="..." source="..." />` (children 없이) — placeholder grid + "data pending" 표시. 본문 레이아웃을 미리 확정해두는 용도.
+
+모든 경우 `<ChartFrame>` 으로 감싸 메타(kind / caption / source) 통일.
 
 ### "교훈" 섹션 가이드 (중요)
 
@@ -376,12 +419,20 @@ relatedCases: [lab, siren]
   ```
 - `public/` 폴더는 favicon, og-image 같이 *변환 안 할* 파일만
 
-### Tailwind
+### Tailwind + 색 시스템
 
-- utility class 직접 사용 (`@apply` 금지)
-- 색상은 디자인 토큰만 (tailwind.config의 theme.extend)
-- 다크모드 우선
-- 한국어 폰트: Pretendard
+- utility class 직접 사용 (`@apply` 금지, `body` base 만 예외)
+- 색상은 `ink` 팔레트만 (`tailwind.config.ts` 의 `theme.extend.colors`)
+- `ink-50` ~ `ink-900` 는 CSS variable 기반 (`src/index.css` 에서 `html` / `html.dark` 에 미러 매핑)
+- 컴포넌트는 **"다크-퍼스트 의미"** 로 작성:
+  - `ink-900` = 가장 콘트라스트가 큰 표면 (다크에서 검정, 라이트에서 흰색)
+  - `ink-50` = 가장 콘트라스트가 큰 텍스트 (다크에서 흰색, 라이트에서 검정)
+  - 두 모드 모두 자동 전환 — `dark:` prefix 거의 안 씀
+- 라이트 ↔ 다크 전환은 `<html>` 에 `dark` class 토글만으로 작동
+- 헤더의 ☀/☽ 토글 + localStorage 영속, OS `prefers-color-scheme` fallback
+- **기본 테마: 라이트** (저장된 선호 없고 OS도 라이트면 라이트, OS가 다크면 다크)
+- 한국어 폰트: Pretendard (`index.html` 의 CDN)
+- 디자인 톤: Bloomberg 느낌 — 강한 채도 (빨강/녹색/노랑) 자제, 회색 톤으로 데이터 표현
 
 ### 디자인 톤 (재강조)
 
@@ -457,6 +508,11 @@ fix(case-card): correct max drawdown formatting
 - "의혹이 제기되었다", "조사가 시작되었다"
 - "투자자가 알아두어야 할 시그널"
 
+**테이블 표기 — 색 이모지 자제:**
+- `✅` 대신 `O` (텍스트)
+- `❌` 는 유지 가능하나 채도가 거슬리면 `X` 텍스트로 통일도 OK
+- 해당 없음은 `—` 또는 빈칸
+
 ### 모르겠으면
 
 이 문서를 다시 참고하고, 그래도 모호하면 사용자에게 묻는다. 추측해서 코드 짜지 않는다.
@@ -503,4 +559,4 @@ VITE_PLAUSIBLE_DOMAIN=example.com  # 분석 도구 (선택)
 
 ---
 
-_Last updated: 2026-05-12_
+_Last updated: 2026-05-12 — RAVE 케이스 완료 후 컴포넌트/배포/테마 시스템 반영_
