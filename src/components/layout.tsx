@@ -36,7 +36,7 @@ export function Layout({ children }: { children: ReactNode }) {
 type Theme = 'light' | 'dark'
 
 function getInitialTheme(): Theme {
-  if (typeof document === 'undefined') return 'dark'
+  if (typeof document === 'undefined') return 'light'
   try {
     const stored = localStorage.getItem('theme')
     if (stored === 'light' || stored === 'dark') return stored
@@ -45,11 +45,11 @@ function getInitialTheme(): Theme {
   }
   if (
     typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-color-scheme: light)').matches
+    window.matchMedia('(prefers-color-scheme: dark)').matches
   ) {
-    return 'light'
+    return 'dark'
   }
-  return 'dark'
+  return 'light'
 }
 
 function applyTheme(theme: Theme) {
