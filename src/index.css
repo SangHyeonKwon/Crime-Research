@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * 컴포넌트 코드는 항상 "dark-first" 의미로 작성:
+   *   ink-900 = 가장 콘트라스트가 큰 surface (다크에서 검정, 라이트에서 흰색)
+   *   ink-50  = 가장 콘트라스트가 큰 텍스트 (다크에서 흰색, 라이트에서 검정)
+   * 라이트 모드는 50↔900 미러 매핑으로 자동 전환.
+   */
+
+  html {
+    --ink-50:  9 9 11;
+    --ink-100: 24 24 27;
+    --ink-200: 39 39 42;
+    --ink-300: 63 63 70;
+    --ink-400: 82 82 91;
+    --ink-500: 113 113 122;
+    --ink-600: 161 161 170;
+    --ink-700: 228 228 231;
+    --ink-800: 244 244 245;
+    --ink-900: 250 250 250;
+    color-scheme: light;
+  }
+
+  html.dark {
+    --ink-50:  250 250 250;
+    --ink-100: 244 244 245;
+    --ink-200: 228 228 231;
+    --ink-300: 161 161 170;
+    --ink-400: 113 113 122;
+    --ink-500: 82 82 91;
+    --ink-600: 63 63 70;
+    --ink-700: 39 39 42;
+    --ink-800: 24 24 27;
+    --ink-900: 9 9 11;
+    color-scheme: dark;
+  }
+
+  html {
+    transition: background-color 150ms ease;
+  }
+
+  body {
+    @apply bg-ink-900 text-ink-100 antialiased;
+    font-family:
+      'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: 'tnum';
+  }
+}

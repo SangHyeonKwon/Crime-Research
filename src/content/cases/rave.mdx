@@ -1,0 +1,241 @@
+---
+slug: "rave"
+title: "RaveDAO (RAVE)"
+tokenSymbol: "RAVE"
+incidentDate: "2026-04-18"
+publishedDate: "2026-05-12"
+status: "alleged"
+severity: "critical"
+patterns:
+  - "short-squeeze"
+  - "supply-concentration"
+  - "alpha-no-spot"
+  - "cross-exchange-coordination"
+metrics:
+  startPrice: 0.25
+  peakPrice: 27.94
+  bottomPrice: 0.50
+  maxGain: 103.83
+  maxDrawdown: -0.95
+  marketCapPeak: 6000000000
+  marketCapEvaporated: 5700000000
+  pumpDurationDays: 9
+  crashDurationHours: 24
+  liquidationVolume24h: 44000000
+exchanges:
+  binanceSpot: false
+  binanceAlpha: true
+  binanceFutures: true
+  others: ["bitget", "gate", "kucoin"]
+allegations:
+  - source: "ZachXBT"
+    sourceUrl: "https://x.com/zachxbt"
+    date: "2026-04-18"
+    summary: "공급의 90%+를 인사이더가 보유한 상태에서 시장 manipulation이 진행 중이라며 거래소에 조사 요청. $25K 바운티 제시."
+  - source: "CoinDesk"
+    sourceUrl: "https://www.coindesk.com/markets/2026/04/19/ravedao-s-rave-token-collapses-90-in-a-day-as-exchange-probes-widen"
+    date: "2026-04-19"
+    summary: "RAVE 토큰 24시간 만에 90% 폭락. Binance와 Bitget이 시장 manipulation 의혹 조사 개시."
+  - source: "DL News"
+    sourceUrl: "https://www.dlnews.com/articles/markets/binance-and-bitget-under-fire-after-ravedao-crash/"
+    date: "2026-04-19"
+    summary: "Bitget CEO Gracy Chen, Binance Co-CEO Richard Teng이 각각 공식 조사 개시 확인."
+relatedCases: ["lab", "siren"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { FundFlow } from '@/components/fund-flow'
+import { SupplyBars } from '@/components/supply-bars'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+
+export const raveHolders = [
+  { rank: 1, address: "0x9831156f1a6e506fca41503590b42f07c2e80f54", label: "Gnosis Safe · alleged team", category: "team", pct: 76.82, balance: 751955556 },
+  { rank: 2, address: "0x6020656d1ef182173e45d4fc375bdd5a48c674b0", label: "Gnosis Safe · alleged team", category: "team", pct: 9.78, balance: 95702737 },
+  { rank: 3, address: "0x0a1f07993a51cceb4f52ca67765aeceadda790d7", label: "Gnosis Safe · alleged team", category: "team", pct: 4.46, balance: 43658417 },
+  { rank: 4, address: "0xffa8db7b38579e6a2d14f9b347a9ace4d044cd54", label: "Bitget 35", category: "exchange", pct: 3.33, balance: 32565659 },
+  { rank: 5, address: "0x53d7d52301366dc14e1916b14efec1add8f3487b", label: "Cleared 04-19 → Bitget 6", category: "dispersed", pct: 2.35, balance: 22996077 },
+  { rank: 6, address: "0xeb74df8588cfc1c179df4bd96c0bb8b227b9be92", category: "unknown", pct: 2.30, balance: 22480977 },
+  { rank: 7, address: "0x31694d761a8e851cffbcd286ac54d01e5ce5afe6", category: "unknown", pct: 0.51, balance: 5000000 },
+  { rank: 8, address: "0x0d0707963952f2fba59dd06f2b425ace40b492fe", label: "Gate.io deposit", category: "exchange", pct: 0.33, balance: 3243279 },
+  { rank: 9, address: "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23", label: "Bitget 6", category: "exchange", pct: 0.06, balance: 577285 },
+  { rank: 10, address: "0x911203d9228f01503d8ffcd7b66eff367f1d3ee0", category: "unknown", pct: 0.02, balance: 239813 },
+]
+
+## 개요
+
+9일 만에 +10,383%, 24시간 만에 -95%. 단 약 $52M 청산으로 $5.7B 시총이 증발한 사례입니다.
+
+바이낸스 spot 미상장 + 알파/perp만 있는 구조에서, 공급의 약 90%를 보유한 팀 연관 멀티시그가 거래소 입출금을 반복하며 short squeeze 환경을 조성, $0.25에서 $27.94까지 펌프된 뒤 24시간 만에 95% 폭락한 사건. ZachXBT의 공개 폭로 이후 Binance, Bitget, Gate가 공식 조사를 개시했습니다.
+
+> "$52M 청산으로 $6B 시총이 증발한 비율은 정상 시장에서 나오기 어렵다" — ZachXBT
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 12월">
+바이낸스 알파에 RAVE 상장. 1B 총 공급량, 가격 $0.25 부근에서 횡보. 시장 관심 거의 없음.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 초 — 약 9일간">
+명확한 catalyst 없이 가격 급등 시작. 알트 시즌이 아니었고 같은 섹터 다른 토큰들은 횡보 중이었음.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 13-14일">
+ZachXBT가 RaveDAO 공동창업자에게 비공개 DM으로 우려 사항 전달. 응답 없음.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 17일">
+가격 $27.94 도달. 30일 누적 **+10,383%**. 시총 약 $6B, top 15 진입.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 18일 07:26 UTC">
+ZachXBT가 X에 공개 폭로. Binance, Bitget, Gate에 조사 요청 + $10K 바운티 제시. 같은 날 바운티를 **$25K**로 상향.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 18일 — 수 시간 후">
+Bitget CEO Gracy Chen, Binance Co-CEO Richard Teng이 각각 공식 조사 개시 확인.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 19일">
+RaveDAO 6-part 부인 스레드 발표. 부인 발표 이후 매도가 오히려 가속화. 24시간 만에 $27 → $1, **-95% 폭락**. 강제청산 약 $44M.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 19일 — 수 시간 후">
+멀티시그 `0x53d7`이 약 23M RAVE를 Bitget으로 전송. 가격 추가 약 40% 하락 ($1 → $0.60).
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 20일 이후">
+가격 $0.50 부근에서 거래. ZachXBT, 유사 패턴 토큰 6개 추가 지목 (SIREN, MYX, COAI, M, PIPPIN, RIVER).
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조
+
+### 시장 구조 — 왜 이게 가능했나
+
+이 케이스의 핵심은 **바이낸스 spot이 없다는 구조적 결함**입니다.
+
+| 거래소 | Spot | Perpetual | Alpha |
+|--------|------|-----------|-------|
+| **Binance** | ❌ | O | O |
+| Bitget | O | O | — |
+| Gate.io | O | O | — |
+| KuCoin | O | — | — |
+| Coinbase | ❌ | ❌ | — |
+
+바이낸스 perp의 mark price는 자체 spot이 아니라 외부 거래소(Bitget, Gate, KuCoin)의 spot 인덱스를 참조합니다. 외부 spot 시장은 유동성이 얕아 비교적 적은 자금으로 mark price 조작이 가능해지고, 그 mark price가 바이낸스 perp의 수십억 달러 OI를 청산시키는 트리거가 됩니다.
+
+### 공급 분포 — 실제 거래 가능한 토큰은 3~4% 수준
+
+**문제의 본질:** 1B 토큰이 발행됐지만 Top 3 wallet (모두 Gnosis Safe 컨트랙트, ZachXBT 분석상 팀 연관 의혹) 이 91.06% 를 보유. 거래소 deposit address (Bitget · Gate · KuCoin) 비중까지 합치면 시장에서 자유롭게 거래되는 물량은 한 자릿수 %대에 불과합니다.
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION"
+  caption="Top 10 holders — 사건 당시 (2026-04-18 00:00 UTC) RAVE 분포. 라벨은 Etherscan tag (거래소) 와 ZachXBT 분석 (팀 연관 의혹) 출처"
+  source="Dune Analytics · Etherscan"
+  aspect="auto"
+>
+  <SupplyBars rows={raveHolders} asOf="2026-04-18 00:00 UTC" symbol="RAVE" />
+</ChartFrame>
+
+## 수법 분석 — Short Squeeze 셋업
+
+### 1단계: 입금-출금 반복으로 숏 유인
+
+팀 연관 지갑에서 약 $42M 어치 RAVE를 Bitget으로 입금 → "팀이 덤프하려나 보다" 시그널 → 숏 포지션 진입 누적 (피크 시점 바이낸스 트레이더의 약 74%가 숏).
+
+그 다음 약 $32M을 다시 온체인으로 출금 → 실제 매도 압력이 오더북에서 사라짐 → 매수 압력만 남은 상태.
+
+### 2단계: 청산 캐스케이드
+
+가격이 펌프되면서 숏 강제청산 시작 → 청산 엔진의 자동 시장가 매수 주문이 가격을 추가 펌프 → 다음 가격대 청산 트리거 → self-reinforcing loop.
+
+이 메커니즘에서 인사이더는 spot을 거의 던지지 않고도 가격을 끌어올릴 수 있습니다. 청산 캐스케이드가 대신 일을 합니다.
+
+### 3단계: 피크에서 layered 입금
+
+멀티시그 `0x53d7...487b` 가 2026-04-19 19:47:59 UTC 단일 트랜잭션에서 보유 전량 **22,996,077 RAVE** 를 두 갈래로 분산. 두 갈래 모두 1~6분 후 또 다른 burner wallet으로 forward (각각 소액 *test* 송금 → 잔량 *bulk* 송금 패턴 — 거래소 deposit 검증 SOP). 11분 만에 모든 자금이 거래소 hot wallet `Bitget 6` (`0x1ab4...8f23`) 으로 수렴.
+
+특기할 점은 모든 중간 burner wallet들이 동일하게 `Bitget 6` 으로부터 ETH gas를 받아 활성화 (Etherscan "Funded By" 표시) — funder 와 final receiver 가 일치하므로 **동일 Bitget 계정 사용자에 의한 의도된 layered deposit** 가능성이 시사됩니다.
+
+이 분산 입금 직후 11분간 가격 $1 → $0.60 (-40%) 추가 하락 발생.
+
+<ChartFrame
+  kind="FUND FLOW"
+  caption="0x53d7 multisig → Bitget 6 자금 흐름 (22.99M RAVE, 2026-04-19 19:47 → 19:58 UTC, 2-hop burner 경유, 모든 burner는 Bitget 6에서 gas funded)"
+  source="Dune Analytics · Etherscan"
+  aspect="square"
+>
+  <FundFlow />
+</ChartFrame>
+
+## 데이터
+
+<ChartFrame
+  kind="PRICE TIMELINE"
+  caption="RAVE 가격 차트 — 2026.03.25 ~ 04.25 (일봉). 펌프/폭락 주요 이벤트 마커 포함"
+  source="CoinGecko 가격 데이터 재구성"
+  aspect="video"
+/>
+
+<ChartFrame
+  kind="LIQUIDATIONS"
+  caption="24시간 강제청산 ~$44M (2026.04.18~19). long/short 분할 표시"
+  source="Coinglass"
+  aspect="video"
+/>
+
+**ZachXBT 핵심 인용:**
+
+> "We cannot allow this blatant market manipulation by insiders controlling >90% RAVE support to further extract from retail investors."
+
+### 현재 상태 (2026.04 말 기준)
+
+- Binance, Bitget, Gate의 공식 조사 진행 중
+- 약 750M RAVE를 보유한 단일 지갑은 여전히 포지션 유지
+- 가격은 $0.50 부근에서 횡보
+- RaveDAO 팀은 "가격 트리거 또는 성과 트리거 락업" 모델 검토 중이라고 발표했으나 구체적 메커니즘 또는 일정 commit 없음
+- 일부 데드캣 바운스 (+138% 반등) 발생했으나 지속성 불확실
+
+## 교훈 — 다음 비슷한 토큰을 식별하는 시그널
+
+이 케이스에서 트레이더가 추출할 수 있는 위험 지표들. 단일 항목으로는 약하지만, **3개 이상 겹치면 강한 경고 신호**입니다.
+
+### 시장 구조 시그널
+
+- 바이낸스 spot 미상장 + 알파/perp 동시 상장
+- 얕은 spot 시장(Bitget, Gate, KuCoin)이 주된 가격발견 venue
+- 신규 토큰인데 여러 거래소에 빠르게 분산 상장
+
+### 공급 구조 시그널
+
+- 상위 3-10 지갑이 공급의 85%+ 보유
+- 유통 공급량이 전체의 25% 이하
+- 명확한 vesting/lockup 일정 미공시
+- Gnosis Safe 멀티시그가 다수 보유
+
+### 가격 행동 시그널
+
+- 명확한 catalyst 없는 급등 (뉴스/파트너십/업그레이드 없음)
+- 거래량 대비 시총 비율 비정상 (시총 $1B인데 일일 거래량 $50M 이하)
+- **시총 / 청산액 비율 100:1 이상** — RAVE에서 가장 명확했던 지표
+
+### 파생상품 시그널
+
+- OI / Market Cap 비율 > 0.3
+- 펀딩비 비정상 (±0.05% per 8h 이상 지속)
+- Long/Short ratio가 한쪽으로 70%+ 치우침
+
+### 온체인 시그널
+
+- 펌프 직전 팀 지갑 → 거래소 대량 입금
+- 펌프 후 거래소 → 팀 지갑 대량 출금 (실제 매도 압력 회수)
+- 컨트랙트 admin 권한 미포기
+
+### ZachXBT의 권고
+
+> "공급이 집중된 manipulation 의심 토큰을 short하는 것도 권장하지 않는다."
+
+Short squeeze 셋업이 또 반복될 수 있기 때문에, 인사이더 집중도가 높은 토큰은 어느 방향으로도 포지션을 잡기 위험합니다. 가장 안전한 선택은 **거래하지 않는 것**입니다.
+
+## 출처
+
+1. **ZachXBT** — [X (Twitter)](https://x.com/zachxbt) — 2026.04.18 원 폭로
+2. **CoinDesk** — ["RaveDAO's RAVE token collapses 90% in a day as exchange probes widen"](https://www.coindesk.com/markets/2026/04/19/ravedao-s-rave-token-collapses-90-in-a-day-as-exchange-probes-widen) — 2026.04.19
+3. **The Block** — ["RaveDAO team denies role in RAVE token pump"](https://www.theblock.co/post/397991/ravedao-team-denies-role-in-rave-token-pump-as-binance-bitget-open-investigations) — 2026.04.19
+4. **DL News** — ["Binance and Bitget to investigate Rave token market manipulation claims"](https://www.dlnews.com/articles/markets/binance-and-bitget-under-fire-after-ravedao-crash/)
+5. **CryptoPotato** — ["From $26 to Under $1: RAVE's Historic Crash Draws Investigation Calls"](https://cryptopotato.com/from-26-to-under-1-raves-historic-crash-draws-investigation-calls/)
+6. **KuCoin Blog** — ["RaveDAO Pump and Dump April 2026"](https://www.kucoin.com/blog/ravedap-pump-dump-april-2026)
+7. **TradingView News** — ["Rave Token Crashes 95% As Manipulation Allegations Trigger Panic"](https://www.tradingview.com/news/newsbtc:43fe3da3d094b:0-rave-token-crashes-95-as-manipulation-allegations-trigger-panic/)
