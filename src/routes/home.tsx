@@ -15,7 +15,8 @@ export function Home() {
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-300 md:text-lg">
             공개된 온체인 데이터와 보도 기사를 기반으로 한 교육 목적의 사례
-            연구입니다. 트레이더가 비슷한 위험 구조를 사전에 식별할 수 있도록
+            연구입니다. 
+            <br/>트레이더가 비슷한 위험 구조를 사전에 식별할 수 있도록
             돕는 것이 목적입니다.
           </p>
         </div>

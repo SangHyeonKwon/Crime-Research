@@ -45,8 +45,11 @@ relatedCases: ["lab", "siren"]
 
 import { ChartFrame } from '@/components/chart-frame'
 import { FundFlow } from '@/components/fund-flow'
+import { LongShortRatio } from '@/components/long-short-ratio'
 import { SupplyBars } from '@/components/supply-bars'
 import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { ZoomableImage } from '@/components/zoomable-image'
+import priceCandle4h from '@/assets/cases/rave/price-candle-4h.png'
 
 export const raveHolders = [
   { rank: 1, address: "0x9831156f1a6e506fca41503590b42f07c2e80f54", label: "Gnosis Safe · alleged team", category: "team", pct: 76.82, balance: 751955556 },
@@ -164,18 +167,22 @@ RaveDAO 6-part 부인 스레드 발표. 부인 발표 이후 매도가 오히려
 ## 데이터
 
 <ChartFrame
-  kind="PRICE TIMELINE"
-  caption="RAVE 가격 차트 — 2026.03.25 ~ 04.25 (일봉). 펌프/폭락 주요 이벤트 마커 포함"
-  source="CoinGecko 가격 데이터 재구성"
-  aspect="video"
-/>
+  kind="PRICE · 4H"
+  caption="RAVE/USDT perpetual 4시간봉, 2026.03.25 ~ 05.11. 하단 패널은 Open Interest (USD). 4월 17~18 피크 $27.94 직후 4월 19일 24시간 만에 -95% 폭락. 차트 클릭 시 확대."
+  source="Binance Futures · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={priceCandle4h} alt="RAVE/USDT perpetual 4시간봉 + Open Interest" />
+</ChartFrame>
 
 <ChartFrame
-  kind="LIQUIDATIONS"
-  caption="24시간 강제청산 ~$44M (2026.04.18~19). long/short 분할 표시"
-  source="Coinglass"
+  kind="LONG / SHORT RATIO"
+  caption="펌프 직전 (~04/18) 약 0.30 — 숏 포지션이 약 3배 우세. 폭락 다음 날 (04/19~20) 1.25 → 2.20 으로 급반전, 이후 3.0 ~ 3.5 부근에 안착. 숏 청산 캐스케이드가 시장 포지션 자체를 long-skew 로 뒤집은 흔적."
+  source="Binance Futures · 1d aggregate"
   aspect="video"
-/>
+>
+  <LongShortRatio />
+</ChartFrame>
 
 **ZachXBT 핵심 인용:**
 
