@@ -13,20 +13,20 @@ export interface HolderRow {
 
 const categoryStyle: Record<HolderCategory, { bar: string; chip: string }> = {
   team: {
-    bar: 'bg-ink-200',
+    bar: 'bg-ink-100',
     chip: 'border-ink-400 text-ink-100',
   },
-  dispersed: {
-    bar: 'bg-ink-400',
+  exchange: {
+    bar: 'bg-ink-300',
     chip: 'border-ink-500 text-ink-200',
   },
-  exchange: {
+  unknown: {
+    bar: 'bg-ink-400',
+    chip: 'border-ink-600 text-ink-200',
+  },
+  dispersed: {
     bar: 'bg-ink-500',
     chip: 'border-ink-600 text-ink-300',
-  },
-  unknown: {
-    bar: 'bg-ink-700',
-    chip: 'border-ink-700 text-ink-400',
   },
 }
 
@@ -47,7 +47,6 @@ interface SupplyBarsProps {
 }
 
 export function SupplyBars({ rows, asOf, symbol }: SupplyBarsProps) {
-  const maxPct = Math.max(...rows.map((r) => r.pct))
   const total = rows.reduce((s, r) => s + r.pct, 0)
   const top3 = rows.slice(0, 3).reduce((s, r) => s + r.pct, 0)
 
@@ -70,7 +69,7 @@ export function SupplyBars({ rows, asOf, symbol }: SupplyBarsProps) {
       <ol className="space-y-3">
         {rows.map((row) => (
           <li key={row.address}>
-            <SupplyRow row={row} maxPct={maxPct} symbol={symbol} />
+            <SupplyRow row={row} symbol={symbol} />
           </li>
         ))}
       </ol>
@@ -80,14 +79,12 @@ export function SupplyBars({ rows, asOf, symbol }: SupplyBarsProps) {
 
 function SupplyRow({
   row,
-  maxPct,
   symbol,
 }: {
   row: HolderRow
-  maxPct: number
   symbol: string
 }) {
-  const widthPct = Math.max(0.5, (row.pct / maxPct) * 100)
+  const widthPct = Math.max(0.5, row.pct)
   const { bar, chip } = categoryStyle[row.category]
 
   return (
@@ -118,7 +115,7 @@ function SupplyRow({
           </span>
         </div>
       </div>
-      <div className="relative h-2.5 overflow-hidden rounded-sm bg-ink-800/60">
+      <div className="relative h-3 overflow-hidden rounded-sm bg-ink-700/50">
         <div
           className={cn('h-full rounded-sm', bar)}
           style={{ width: `${widthPct}%` }}
