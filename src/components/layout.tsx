@@ -14,9 +14,7 @@ export function Layout({ children }: { children: ReactNode }) {
             Crime Research
           </Link>
           <div className="flex items-center gap-4">
-            <span className="hidden font-mono text-[10px] uppercase tracking-widest text-ink-500 sm:inline">
-              Risk Pattern Studies
-            </span>
+            <LangToggle />
             <ThemeToggle />
           </div>
         </div>
@@ -89,6 +87,72 @@ function ThemeToggle() {
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
     </button>
+  )
+}
+
+type Lang = 'ko' | 'en'
+
+function getInitialLang(): Lang {
+  if (typeof document === 'undefined') return 'ko'
+  try {
+    const stored = localStorage.getItem('lang')
+    if (stored === 'ko' || stored === 'en') return stored
+  } catch {
+    /* ignore */
+  }
+  if (typeof navigator !== 'undefined' && navigator.language.toLowerCase().startsWith('en')) {
+    return 'en'
+  }
+  return 'ko'
+}
+
+function applyLang(lang: Lang) {
+  document.documentElement.lang = lang
+  try {
+    localStorage.setItem('lang', lang)
+  } catch {
+    /* ignore */
+  }
+}
+
+function LangToggle() {
+  const [lang, setLang] = useState<Lang>(getInitialLang)
+
+  useEffect(() => {
+    applyLang(lang)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const handleSelect = (next: Lang) => {
+    if (next === lang) return
+    applyLang(next)
+    setLang(next)
+  }
+
+  return (
+    <div
+      role="group"
+      aria-label="언어 선택 / Language"
+      className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest"
+    >
+      <button
+        type="button"
+        onClick={() => handleSelect('ko')}
+        aria-pressed={lang === 'ko'}
+        className={`transition hover:text-ink-100 ${lang === 'ko' ? 'text-ink-100' : 'text-ink-500'}`}
+      >
+        KR
+      </button>
+      <span aria-hidden className="text-ink-600">|</span>
+      <button
+        type="button"
+        onClick={() => handleSelect('en')}
+        aria-pressed={lang === 'en'}
+        className={`transition hover:text-ink-100 ${lang === 'en' ? 'text-ink-100' : 'text-ink-500'}`}
+      >
+        EN
+      </button>
+    </div>
   )
 }
 

@@ -7,10 +7,7 @@ export function Home() {
     <Layout>
       <section className="border-b border-ink-700/60 px-6 py-14 md:px-12 md:py-20">
         <div className="mx-auto max-w-6xl">
-          <p className="font-mono text-xs uppercase tracking-widest text-ink-500">
-            Crypto Risk Patterns
-          </p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-ink-50 md:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-ink-50 md:text-4xl">
             구조적 위험 요소 분석
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-300 md:text-lg">
