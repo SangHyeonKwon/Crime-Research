@@ -8,10 +8,21 @@ const statusLabel: Record<CaseFrontmatter['status'], string> = {
   'pattern-match': '구조적 위험',
 }
 
-export function CaseCard({ data }: { data: CaseFrontmatter }) {
+interface CaseCardProps {
+  data: CaseFrontmatter
+  activePatterns?: string[]
+  onTogglePattern?: (pattern: string) => void
+}
+
+export function CaseCard({
+  data,
+  activePatterns = [],
+  onTogglePattern,
+}: CaseCardProps) {
   const drawdown = data.metrics?.maxDrawdown
   const drawdownLabel =
     typeof drawdown === 'number' ? `${(drawdown * 100).toFixed(0)}%` : null
+  const activeSet = new Set(activePatterns)
 
   return (
     <Link
@@ -33,7 +44,12 @@ export function CaseCard({ data }: { data: CaseFrontmatter }) {
 
       <div className="mt-3 flex flex-wrap gap-1">
         {data.patterns.slice(0, 3).map((p) => (
-          <PatternBadge key={p} pattern={p} />
+          <PatternBadge
+            key={p}
+            pattern={p}
+            active={activeSet.has(p)}
+            onToggle={onTogglePattern}
+          />
         ))}
       </div>
 
