@@ -43,7 +43,7 @@ export function CaseCard({
       </h3>
 
       <div className="mt-3 flex flex-wrap gap-1">
-        {data.patterns.slice(0, 3).map((p) => (
+        {data.patterns.map((p) => (
           <PatternBadge
             key={p}
             pattern={p}
