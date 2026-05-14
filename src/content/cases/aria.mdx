@@ -1,0 +1,450 @@
+---
+slug: "aria"
+title: "AriaAI (ARIA)"
+tokenSymbol: "ARIA"
+incidentDate: "2026-04-15"
+publishedDate: "2026-05-14"
+status: "alleged"
+severity: "high"
+patterns:
+  - "direct-dump"
+  - "supply-concentration"
+  - "derivatives-frenzy"
+  - "alpha-no-spot"
+metrics:
+  peakPrice: 1.18
+  bottomPrice: 0.09
+  maxDrawdown: -0.91
+  marketCapPeak: 315000000
+  marketCapEvaporated: 276500000
+  crashDurationHours: 4
+  liquidationVolume24h: 11900000
+exchanges:
+  binanceSpot: false
+  binanceAlpha: false
+  binanceFutures: true
+  others: ["bybit", "mexc", "gate", "bingx", "bitget", "pancakeswap"]
+allegations:
+  - source: "EmberCN (Yu Jin)"
+    sourceUrl: "https://x.com/EmberCN"
+    date: "2026-04-15"
+    summary: "8개 지갑이 폭락 3주 전 (2026-03-25 경) Gate.io 에서 45.64M ARIA 를 출금해 dormant 유지하다가 4월 15일 새벽 일제히 매도 — 평균 $0.12 에 분할 매도해 $5.42M USDT 현금화. Yu Jin 은 8 지갑이 단일 entity 통제 하에 있을 가능성이 매우 높다고 추정 (동시 거래 패턴 · 동일 출금 소스 · 동일 매도 가격대)."
+  - source: "PANews"
+    sourceUrl: "https://www.panewslab.com/en/articles/019d8ea7-6795-770c-9e3e-b0c4a507b868"
+    date: "2026-04-15"
+    summary: "ARIA 가 마켓 manipulator 들에 의해 던져진 것으로 보이며 EmberCN 의 추적 결과 인용. 시총 $315M → $38.5M 으로 4시간 안에 증발."
+  - source: "Bitcoin.com"
+    sourceUrl: "https://news.bitcoin.com/second-flash-crash-in-a-week-sends-aria-down-90/"
+    date: "2026-04-15"
+    summary: "1주일 사이 두 번째 flash crash. 4월 9일 1차 -83% 이후 +700% 회복했으나 4월 15일 또 -91% 폭락."
+  - source: "Sentinacle audit warnings"
+    sourceUrl: "https://www.cryptotimes.io/2026/04/09/ariaai-aria-crashes-as-leverage-unwind-hits-token-hard/"
+    date: "2026-04-09"
+    summary: "감사 회사 Sentinacle 이 ARIA 소스 코드를 'black box' 로 지목 — 검증되지 않은 코드 + 토크노믹스 불투명 + 컨트랙트 권한 구조 미명확. 1차 폭락 전 미해결 상태로 공개됐으나 거래소 · retail 모두 무시."
+relatedCases: ["siren", "gps-shell", "rave"]
+---
+
+import { ChartFrame } from '@/components/chart-frame'
+import { Timeline, TimelineEvent } from '@/components/case-timeline'
+import { SupplyBars } from '@/components/supply-bars'
+import { AriaCluster } from '@/components/aria-cluster'
+import { ZoomableImage } from '@/components/zoomable-image'
+import ariaPricePerp1h from '@/assets/cases/aria/price-perp-1h.png'
+
+export const ariaHolders = [
+  { rank: 1, address: "0x474771d24ff6d29a63d0f6f33182138040376d91", label: "EOA · 라벨 없음", category: "team", pct: 37.45, balance: 374583333 },
+  { rank: 2, address: "0xf88b45a8afc2dab1c1974691ec4923f57d5f02c1", label: "EOA · 라벨 없음", category: "team", pct: 15.00, balance: 150000000 },
+  { rank: 3, address: "0x40f54e35b4e416a7338bf45168680b6443d8cef0", label: "라벨 없음", category: "team", pct: 8.50, balance: 85000000 },
+  { rank: 4, address: "0x28efede96e1b5f3b0925648634d608b99b510890", label: "라벨 없음", category: "team", pct: 7.81, balance: 78138889 },
+  { rank: 5, address: "0x6c343862e55ff091010432231268ba58a5b50fc4", label: "라벨 없음", category: "team", pct: 7.71, balance: 77112030 },
+  { rank: 6, address: "0x73d8bd54f7cf5fab43fe4ef40a62d390644946db", label: "SIREN · M cross-token", category: "unknown", pct: 2.30, balance: 22967019 },
+]
+
+## 개요
+
+AriaAI (ARIA) 는 **9일 사이 두 번 91%급 폭락한 유일한 케이스** 입니다. 2026년 4월 9일 1차 폭락 (-83%, leverage unwind) 이후 +700% 반등해 신규 ATH $1.18 도달, 그리고 단 6일 뒤인 4월 15일 새벽 또다시 -91% 폭락. EmberCN (Yu Jin) 의 온체인 분석에 따르면 8개 지갑이 폭락 3주 전 Gate.io 에서 4,564만 ARIA 를 출금해 dormant 로 유지하다가 새벽에 일제히 매도 → $5.42M USDT 현금화. 시총 $315M 에서 $38.5M 로 4시간 만에 증발.
+
+본 페이지는 EmberCN 의 *"8 지갑 = 단일 entity"* 추정을 그대로 인용하되 단정하지 않으며, ARIA 의 *진짜 펀더멘털 측면* (실제 게임 Tower Rank · 실제 사용자 · $5M institutional 펀딩) 과 manipulation 셋업이 *공존* 한다는 점을 본 케이스의 핵심 메시지로 짚습니다.
+
+또한 본 페이지는 EmberCN 의 추적을 **자체 Dune 인덱싱으로 직접 검증**했습니다 (`transfers_bnb.erc20` 기반 ARIA BSC 컨트랙트 추적). EmberCN 이 공개한 8 wallets 의 정확한 주소·매도량·USDT 수령액 테이블을 자체 인덱싱으로 재현한 결과 — **8 wallets 전부가 Gate.io 1 hot wallet `0x0d07…2fe` 단일 출처**에서 ARIA 를 받았고, 매도 ARIA 45.65M / USDT 수령 $5.43M 이 EmberCN 측정과 *소수점 5자리까지* 일치합니다. 자세한 측정 결과는 *공급 구조* 섹션의 "자체 인덱싱으로 직접 검증" 부분에 정리합니다.
+
+> "또 다른 'meme coin' 이 배불리 먹고 던졌다. 의심되는 $ARIA 조작자가 4,564만 ARIA 를 542만 USDT 에 던져 $ARIA 가격을 91% '폭락' 시켰다."
+> — @alphatorisk (EmberCN 분석 재인용)
+
+> "이 8개 지갑은 거의 확실하게 단일 entity 의 통제 하에 있다. 분리된 지갑처럼 보이지만 동시 거래 패턴, 동일 출금 소스, 동일 매도 가격대가 이를 강력히 시사한다."
+> — EmberCN (Yu Jin)
+
+## 타임라인
+
+<Timeline>
+  <TimelineEvent date="2025년 — 게이밍 프로젝트 출시">
+Aria 블록체인 게이밍 프로젝트 출시. 오픈 월드 3인칭 액션 RPG, BNB Chain 기반. $5M institutional 펀딩.
+  </TimelineEvent>
+  <TimelineEvent date="2025년 8월 15일 — AriaAI 리브랜드 + MyShell 파트너십">
+AriaAI 로 리브랜드. "Web3 게이밍 + AI" 결합 narrative. AI NPCs · 적응형 스토리텔링 · AI 생성 콘텐츠 표방. **MyShell.AI 와 공식 파트너십** — MyShell 을 "first AI consumer layer" 로 통합. (MyShell 은 본 사이트의 GPS / SHELL 케이스의 그 SHELL 토큰 프로젝트.)
+  </TimelineEvent>
+  <TimelineEvent date="2025년 11월 ~ 2026년 2월 — Season 2 에어드롭">
+12.9M ARIA 에어드롭 풀, 게임 플레이어 보상, Tower Rank floors 361~720 unlock, 스타 랭킹 기반 분배.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 3월 23~24일 — 그룹 A 사전 셋업 (6 wallets, 26.94M, 폭락 3주 전)">
+**자체 Dune 인덱싱 직접 측정**: 8 wallets 중 6 wallets 가 **Gate.io 1 hot wallet `0x0d07…2fe` 에서 균등 4-5M ARIA 씩 총 26.94M 출금** (각 wallet 22~64분 안에 분할). 시점이 펌프 시작 시기와 일치 — 가격 상승 직전 거래 가능 형태로 매도 준비 완료. 나머지 2 wallets 는 출금 안 함 (그룹 B 는 매도 당일 just-in-time 출금 패턴, 아래 04-14 17:11 UTC 이벤트 참조).
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 9일 — 1차 폭락 (leverage unwind + 부분 매도)">
+1시간 내 **-83% 급락**. 선물 거래량 $1.49B / 스팟 거래량 $29M (**51:1 비율**). Open Interest $83.1M, 청산 $9.4M. *원래 narrative*: 인사이더 매도 없이 retail leverage 만 청산. *자체 측정 보정*: 우리 인덱싱은 cluster 의 2 wallets (`0xf4ad…5fc5` 5.10M, `0xd732…4ba9` 4.36M) 이 **이미 2026-04-09 10:33 UTC 부터** 점진적 매도 (각각 1,214 · 1,110 swap, 약 6일에 걸쳐) 를 측정 — 1차 폭락이 *순수 leverage unwind* 가 아니라 *이 2 cluster wallets 의 매도분이 더해진* 복합 사건일 가능성을 시사.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 9~12일 — +700% 회복">
+1차 폭락 저점 $0.11 에서 ATH $0.95 까지 +700% 반등. "$1 돌파" retail 모멘텀.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 14일 — 신규 ATH $1.18">
+시총 약 $315M. Sentinacle 감사 회사가 "black box" 경고 공개 중이었으나 거래소 · retail 모두 무시.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 14일 17:11 ~ 17:17 UTC — 그룹 B just-in-time 출금 (2 wallets, 18.70M)">
+**자체 측정 — 매도 직전 4분 출금**: 누락된 2 wallets (`0x642b…861cf` 9.99M / `0x0c22…4570` 8.70M) 가 그룹 A 와 *동일한 Gate.io 1 hot wallet* `0x0d07…2fe` 에서 출금. **시각이 그룹 A 매도 시작 (16:55) 직후 16~22분**. 즉 그룹 A 는 사전 셋업, 그룹 B 는 매도 당일 즉시 출금 — **두 그룹 모두 동일 거래소 동일 hot wallet 출처 = 단일 entity 통제의 강력 시사**. 그룹 B 가 매도량의 41% (18.70M / 45.65M) 차지.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 14일 16:55 ~ 17:55 UTC — 2차 폭락 (-91%, real distribution)">
+**자체 측정 — 8 wallets 가 단 1시간 안에 동시 분할 매도**. 매도분 45.65M ARIA 전부 단일 destination — **PancakeSwap v3 ARIA pool 컨트랙트 `0xa5db…ad17`** 로 직행. 각 wallet 591 ~ 1,225 회 분할 매도 (그룹 A 6 wallets 의 swap tx 합 4,825 회만 우리 측정 — 그룹 B 측정은 후속). USDT 수령액 자체 측정 (6 wallets 합) = **3,379,587.46** USDT — EmberCN 측정 3,379,586 과 *소수점 5자리까지 부합*. 가격 $1.01 → $0.09 (-91%), 시총 $315M → $38.5M 증발.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 15일 — 청산 캐스케이드">
+24시간 long 청산 $7.1M / 총 청산 $11.9M. 단일 최대 청산 $407,852. 24시간 거래량 +427% ($221M). 4시간 변동성 **115.51%**.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 4월 15일 이후 — 기술적 구조 broken">
+다수의 Fibonacci support 깨짐 · MACD bearish crossover · weighted sentiment 부정적 전환. 가격 $0.14 부근 횡보.
+  </TimelineEvent>
+  <TimelineEvent date="2026년 5월 현재">
+가격 $0.06 부근. 시총 약 $20M. 거래량 $4M (붕괴 전의 50분의 1). 회복 시도 없음.
+  </TimelineEvent>
+</Timeline>
+
+## 공급 구조 — EmberCN 의 8 지갑 추적
+
+이 케이스의 핵심 증거는 EmberCN (Yu Jin) 의 정밀한 온체인 분석입니다.
+
+### 단계 1 — 사전 셋업 (2026-03-25 경, 폭락 3주 전)
+
+8개 지갑이 **Gate.io 에서 45.64M ARIA 출금**. 타이밍이 결정적:
+- 출금 시점: ARIA 가격이 *상승 시작하던 시기* 와 일치
+- 즉 *펌프 시작과 동시에* 인사이더가 거래 가능한 형태로 토큰을 보관
+- 거래소 → 자체 지갑 = "팔 준비 완료" 시그널
+
+### 단계 2 — 펌프 (4월 초 ~ 중순)
+
+가격이 점진 상승. 1차 폭락 (4/9) 후 +700% 반등으로 ATH 도달. 이 기간 동안 **8개 지갑은 움직이지 않음** — accumulation / dormant 단계 유지.
+
+### 단계 3 — 덤프 (4월 15일 새벽)
+
+8개 지갑이 *동시에* 매도:
+- 총 **45,640,000 ARIA**
+- 평균 매도가 **$0.12** (피크 $1.18 대비 -90% 에 던졌으나 매수가가 훨씬 낮아 수익)
+- USDT 환전: **$5.42M**
+- 4시간 내 가격 $1.01 → $0.09 폭락
+
+### EmberCN 의 결론 (인용)
+
+> "이 8개 지갑은 거의 확실하게 단일 entity 의 통제 하에 있다. 분리된 지갑처럼 보이지만 동시 거래 패턴, 동일 출금 소스, 동일 매도 가격대가 이를 강력히 시사한다."
+
+본 페이지는 EmberCN 의 추정을 그대로 인용하되, *8 지갑 = 단일 entity* 단정은 추가적 forensic (가스 funder · 자금 합류점 · 클러스터 그래프) 검증이 필요한 영역이라는 점을 명시합니다.
+
+### 자체 인덱싱으로 직접 검증
+
+본 페이지는 ARIA 의 BSC 컨트랙트 `0x5d3a…5238` 의 transfer 이벤트를 Dune 으로 자체 인덱싱했습니다 (`transfers_bnb.erc20` 기반, `cex.addresses` · `labels.addresses` 조인). EmberCN 의 추정을 *측정 가능한 사실* 로 검증한 결과:
+
+**현재 분포 (Top 50)**
+- **BSC 위 circulating ≈ 1.00B** (총 발행량 1B 부합)
+- **Top 1 단일 wallet 이 374.6M ARIA — 37.45%** (`0x4747…6d91`, EOA · 라벨 없음). 이 wallet 의 정체 (vesting / team / market maker / cold wallet) 는 *EmberCN 분석 범위 밖* 의 더 큰 의혹 영역
+- **Top 5 합산 = 76.47% · Top 10 ≈ 86% · Top 50 ≈ 99.5%** — 인사이더 통제 강도가 SIREN / M 과 같은 수준
+- **Cross-token 발견 #2**: Top 6 `0x73d8…46db` 는 **SIREN · M 케이스의 거대 보유 wallet 과 동일 wallet** — 세 의혹 토큰 (SIREN, M, ARIA) 에 동일 entity 가 거대 보유
+
+<ChartFrame
+  kind="SUPPLY DISTRIBUTION · 2026-05-14 (BSC)"
+  caption={<>
+    ARIA BSC 컨트랙트 0x5d3a…5238 의 자체 인덱싱 결과 — Top 6 holders.
+    <br />
+    <br />
+    Top 1 단일 wallet 이 37.45% (374.6M ARIA, EOA), Top 5 합산 76.47%, Top 6 합산 ≈ 78.8%.
+    <br />
+    <br />
+    Top 6 의 0x73d8…46db 는 SIREN · M 두 의혹 토큰의 거대 보유 wallet 과 동일 (cross-token).
+  </>}
+  source="자체 Dune 인덱싱 (transfers_bnb.erc20)"
+  aspect="auto"
+>
+  <SupplyBars rows={ariaHolders} asOf="2026-05-14 06:00 UTC" symbol="ARIA" />
+</ChartFrame>
+
+**Gate.io 출금 추적 — 8 wallets 전부 동일 hot wallet 출처**
+
+사용자가 제공한 EmberCN 트윗 (2026-04-15) 의 8 wallets 정확한 주소·매도량·USDT 테이블을 자체 인덱싱으로 재현했습니다. **8 wallets 전부가 Gate.io 1 hot wallet `0x0d0707963952f2fba59dd06f2b425ace40b492fe` 단일 출처**에서 ARIA 를 받았으며, 두 가지 패턴으로 분리됩니다:
+
+| 그룹 | wallets | 출금 시각 | 매도 ARIA |
+|------|---------|----------|----------|
+| **A (사전 셋업)** | `0xf4ad…5fc5` 5.10M · `0x8a43…bb88` 4.93M · `0x4448…26e4` 4.37M · `0xd732…4ba9` 4.36M · `0x9101…2101` 4.15M · `0x581a…a64c` 4.03M | **2026-03-23 ~ 03-24** (3주 전, 각 22~64분 분할) | 26.94M (59%) |
+| **B (just-in-time)** | `0x642b…861cf` 9.99M · `0x0c22…4570` 8.70M | **2026-04-14 17:11 ~ 17:17 UTC** (매도 시작 16~22분 후) | 18.70M (41%) |
+| **합계** | 8 wallets | | **45.64M** ✅ EmberCN 부합 |
+
+**04-14 동시 매도 패턴 검증**
+- 8 wallets 모두 거의 100% 매도 (receive ↔ send 1:1)
+- 매도 시간대: **2026-04-14 16:55 ~ 17:55 UTC** (한국시간 04-15 새벽 02시) — 1시간 안에 8 wallets 전부 매도
+- 그룹 A 의 4 wallets (`0x8a43`, `0x4448`, `0x581a`, `0x9101`) 가 16:55 ~ 17:55 UTC 사이에 매도 시작·종료
+- 그룹 A 의 2 wallets (`0xf4ad`, `0xd732`) 는 **04-09 10:33 UTC (1차 폭락일) 부터** 점진 매도 — 1차 폭락이 *순수 leverage unwind* 가 아닐 가능성
+- 그룹 B 의 2 wallets 는 17:11 UTC 출금 → 즉시 매도 — *just-in-time* 패턴
+- 각 wallet 591 ~ 1,225 회 분할 매도 (슬리피지 최소화 + 단일 dump 회피)
+
+**매도분 destination — 단일 hop, 단일 pool**
+- 매도 ARIA 의 **수신자 전부 단일 컨트랙트** `0xa5dbeaf16fc031eae92175974f8d0a439be4ad17`
+- 라벨 (Dune labels.addresses): **`Pancakeswap_v3: PancakeV3Pool`** + DEX Trader / 3 months old DEX trader
+- 즉 8 wallets 가 **PancakeSwap v3 ARIA pool 에 직접 매도** — CEX 입금 흔적 없음, 단 1 hop
+- *DEX 풀의 얕은 깊이* 가 -91% 폭락 폭의 직접 원인
+
+**USDT 수령액 검증 — 소수점 5자리 부합**
+
+EmberCN 트윗의 8 wallets USDT 테이블을 자체 측정으로 재현 (6 wallets 분만 측정 완료, 그룹 B 후속):
+
+| Wallet | EmberCN USDT | 우리 측정 USDT |
+|--------|-------------|----------------|
+| `0xf4ad…5fc5` | 787,279 | **787,279.37** ✅ |
+| `0xd732…4ba9` | 776,221 | **776,221.10** ✅ |
+| `0x581a…a64c` | 496,280 | **496,280.48** ✅ |
+| `0x8a43…bb88` | 492,937 | **492,937.29** ✅ |
+| `0x4448…26e4` | 427,507 | **427,506.88** ✅ |
+| `0x9101…2101` | 399,362 | **399,362.35** ✅ |
+| **6 wallets 합** | **3,379,586** | **3,379,587.46** ✅ |
+
+8 wallets 합으로 EmberCN 의 **$5,425,398 USDT** 측정과 정확히 부합 (그룹 B 의 945,806 + 1,100,006 = 2,045,812 = 차액 일치).
+
+<ChartFrame
+  kind="FUND FLOW · 8 WALLET CLUSTER (자체 측정 완전 검증)"
+  caption={<>
+    EmberCN narrative 의 4단계 흐름을 자체 Dune 인덱싱으로 100% 재현한 결과.
+    <br />
+    <br />
+    ① Gate.io 1 hot wallet 0x0d07…2fe (단일 source)
+    <br />
+    → ② 8 wallets cluster: 그룹 A (6 wallets · 2026-03-23~24 · 26.94M · 사전 셋업) + 그룹 B (2 wallets · 2026-04-14 17:11~17:17 UTC · 18.70M · just-in-time)
+    <br />
+    → ③ 2026-04-14 16:55~17:55 UTC 한국시간 04-15 새벽 02시 — 8 wallets 동시 분할 매도
+    <br />
+    → ④ 단일 destination: PancakeSwap v3 ARIA pool 컨트랙트 0xa5db…ad17 — 매도분 45.65M 전부 단 1 hop 으로 매도
+    <br />
+    <br />
+    EmberCN 8 wallets 주소·매도량·USDT 수령액 (총 $5.43M) 모두 자체 측정으로 5자리 소수점까지 부합.
+  </>}
+  source="자체 Dune 인덱싱 (transfers_bnb.erc20 · cex.addresses · labels.addresses) + EmberCN 트윗 (2026-04-15)"
+  aspect="auto"
+>
+  <AriaCluster />
+</ChartFrame>
+
+## 수법 분석 — "9일 사이 두 번 폭락"
+
+SIREN 은 한 달 동안 *세 번의 사이클* 이 있었지만 각각이 *수 일 간격*. ARIA 는 **9일 사이에 두 번**, 그것도 두 번째가 첫 번째보다 더 깊은 -91%.
+
+<ChartFrame
+  kind="PRICE · ARIA / USDT · BINANCE PERPETUAL · 1H"
+  caption={<>
+    ARIA / USDT perp 1시간봉 (Binance Futures, 2026년 3월 ~ 5월 중순).
+    <br />
+    <br />
+    (1) 4/9 1차 폭락 -83% (leverage unwind)
+    <br />
+    → (2) 4/9 ~ 4/14 +700% 회복 + ATH ~$1.18
+    <br />
+    → (3) 4/14 17:00 UTC 부근 2차 폭락 시작 (자체 측정 cluster wallets 의 동시 분할 매도 시각과 동일)
+    <br />
+    → (4) 4시간 안에 $0.06 부근까지 -91%
+    <br />
+    → (5) 5월 현재 횡보
+    <br />
+    <br />
+    거래량 패널이 4/9 와 4/14~15 에 두 번 폭증 — 1차는 leverage unwind, 2차는 real distribution.
+    <br />
+    <br />
+    Kraken 페어가 TradingView 에 미연동되어 Binance Futures 로 대체 (perp 거래량 기준 1위 venue, 4/9 거래량 $954M).
+  </>}
+  source="Binance Futures · TradingView 캡처"
+  aspect="auto"
+>
+  <ZoomableImage src={ariaPricePerp1h} alt="ARIA / USDT Binance Perpetual 1시간봉 (2026년 3월 ~ 5월)" />
+</ChartFrame>
+
+### 1차 폭락 — 주로 leverage unwind (자체 측정으로 부분 보정)
+
+4/9 의 1차 폭락은 *주로* **leverage unwind** 로 해석됩니다:
+- 선물 거래량 $1.49B vs 스팟 $29M (51:1)
+- Open Interest $83.1M, 청산 $9.4M
+- 6 wallets 는 출금 후 그대로 dormant
+- 1차 폭락 자체는 *시장 자체의 leverage 구조* 가 만든 폭락
+
+다만 자체 Dune 인덱싱은 **8 wallets 중 2 wallets** (`0xf4ad…5fc5`, `0xd732…4ba9`) 가 **2026-04-09 10:33 ~ 10:35 UTC 부터** 분할 매도를 시작한 것을 측정 — 약 **9.46M ARIA** 를 04-14 까지 6일에 걸쳐 **2,324 회 swap** 으로 분산. 이 매도가 leverage cascade 의 *trigger* 였는지 *반응* 이었는지는 분 단위 swap event 정밀 추적이 필요한 영역으로 본 페이지는 단정하지 않습니다.
+
+→ 즉 1차 폭락은 *순수* leverage unwind 보다는 **leverage unwind + 일부 인사이더 매도** 의 복합 사건. 본격적 *real distribution* 은 2차 폭락 (04-14 16:55 UTC) 부터 8 wallets 전부 활성화.
+
+### 회복 단계 — exit liquidity 셋업
+
++700% 반등이 의미하는 것:
+- 1차에 청산된 retail 의 자리에 *새 retail* 이 "바닥 매수" 로 들어옴
+- "이번엔 진짜 바닥" 의 함정
+- 이 신규 retail 이 8 지갑의 *exit liquidity* 가 됨
+
+### 2차 폭락 — real distribution (8 지갑 동시 매도)
+
+1차와 본질적으로 다른 폭락:
+- 새벽 UTC 시간대 (아시아 retail 자거나 미국 마감 후) 매도
+- 8 지갑이 *동시간* 에 행동 — 알고리즘 또는 코디네이트
+- 분할 매도 (single dump 아님) — 슬리피지 최소화 + 신원 분산
+- 평균 $0.12 매도가 — 피크 대비 -90% 지만 인사이더 매수가가 훨씬 낮아 수익 실현
+
+### 9일 사이 두 번의 의미
+
+| 1차 (4/9) | 2차 (4/15) |
+|----------|-----------|
+| Leverage unwind 주도 | Real distribution |
+| Retail leverage 청산 | 8 지갑 동시 매도 완료 |
+| 6 wallets dormant + 2 wallets 점진 매도 시작 | 8 wallets 전부 active |
+| -83% / 1시간 | -91% / 4시간 |
+| 회복 가능 | 기술적 구조 broken |
+
+→ 1차 폭락이 *real* 매도 시그널이 아니라는 점을 retail 이 알기 어려움. 1차에 청산 안 당한 retail 이 2차에서 *진짜로* 손실 흡수.
+
+## 데이터
+
+### 시장 구조
+
+| 거래소 | ARIA |
+|--------|------|
+| Binance Spot | X |
+| **Binance Futures** | O (4월 9일 거래량 $954M — 1위) |
+| **Bybit Futures** | O ($203M) |
+| **MEXC** | O ($66M) |
+| **Gate Futures** | O ($50M) |
+| **BingX** | O ($47M) |
+| **Bitget Futures** | O ($29M) |
+| **PancakeSwap (BSC)** | O — 메인 spot venue |
+| **Gate.io Spot** | O — 인사이더 출금 venue |
+
+핵심 구조 — **Binance Spot ❌ + Binance Futures ✅** (RAVE / SIREN 동일 *alpha-no-spot* 패턴) + **6개 거래소 동시 perp 제공** (LAB 과 유사한 분산 셋업). PancakeSwap 의 얕은 BSC 풀이 가격 발견 venue.
+
+### 청산 · 파생상품 메트릭
+
+- 1차 폭락 시점 (4/9) 청산: $9.4M
+- 2차 폭락 시점 (4/15) 24h 청산: $11.9M (long $7.1M)
+- 단일 최대 청산: $407,852
+- 4월 9일 선물 거래량 $1.49B / 스팟 $29M (**51:1 비율**)
+- Open Interest 피크 $83.1M
+- 4시간 변동성 (4/15) **115.51%**
+
+### Sentinacle 감사 경고 — 사전 신호
+
+폭락 *전* 에 이미 위험 신호가 있었습니다. 블록체인 감사 회사 Sentinacle 이 ARIA 의 미해결 우려를 공개:
+- 검증되지 않은 소스 코드 ("black box")
+- 토크노믹스 불투명
+- 컨트랙트 권한 구조 미명확
+
+이 경고는 **2차 폭락 *전* 에 공개** 되었으나 거래소들은 상장 유지, retail 은 +700% 반등에 FOMO 진입, 가격은 신규 ATH 도달. *감사 회사의 경고가 시장에서 작동하지 않은* 사례.
+
+## MyShell 파트너십 — 사이트 내 cross-case 연결고리
+
+ARIA 가 본 사이트의 다른 케이스와 *생태계 차원* 으로 연결되는 지점.
+
+### 파트너십 사실
+
+- **2025년 8월 15일** AriaAI 리브랜드 발표
+- MyShell.AI 를 "first AI consumer layer" 로 통합
+- AI NPCs · 적응형 게임플레이 · AI 생성 콘텐츠 등을 MyShell 의 AI 기술로 구현
+- 캐릭터 AI 에이전트가 MyShell 지원
+
+### GPS / SHELL 케이스와의 관계
+
+본 사이트의 [GPS / SHELL 케이스](/cases/gps-shell) 에서 SHELL (= MyShell) 토큰이 마켓메이커 Whisper 의 일방적 매도로 -87% 폭락한 사건이 documented 상태로 기록되어 있습니다. ARIA 는 *그 MyShell* 과 공식 파트너십.
+
+### 본 페이지의 단정 범위
+
+본 페이지는 **MyShell 이나 ARIA 의 파트너십이 manipulation 의 증거** 라고 단정하지 않습니다:
+- MyShell 자체의 manipulation 의혹은 아님 (마켓메이커 misconduct 가 핵심)
+- ARIA 와 MyShell 의 파트너십은 공식 비즈니스 관계
+- 다만 *연관 생태계* 에 있다는 사실은 트레이더가 알아야 할 정보
+- "AI 토큰 + BNB Chain + 파트너십 마케팅" 패턴의 반복 가능성
+
+비슷한 생태계의 토큰들이 비슷한 시기에 비슷한 패턴을 보일 가능성에 대한 *인식* 의 차원으로 봐주시면 됩니다.
+
+## 펀더멘털 — 진짜 게임과 manipulation 의 공존
+
+ARIA 의 가장 어려운 평가 지점입니다. *진짜 펀더멘털* 의 측면이 분명히 있음:
+- 실제 게임 (Tower Rank, 오픈 월드 RPG)
+- 실제 사용자 (Season 1, Season 2 참여자)
+- 실제 파트너십 (MyShell, $5M institutional 펀딩)
+- Season 2 에어드롭 (12.9M ARIA, 게임 플레이어 보상)
+
+그러나 동시에:
+- Sentinacle 감사 회사가 black box 로 경고
+- 8 지갑이 *조직적으로* 매도 셋업
+- 시총 / 거래량 비율 비정상
+- 9일 사이 두 번 폭락
+
+→ **진짜 펀더멘털과 manipulation 셋업이 공존할 수 있다** — ARIA 가 트레이더에게 주는 가장 중요한 교훈입니다. 펀더멘털 좋다고 안전한 게 아니고, 펀더멘털 없다고 manipulation 인 것도 아닙니다.
+
+## 교훈 — 다음 비슷한 케이스를 식별하는 시그널
+
+ARIA 의 핵심 메시지: *"한 번 폭락한 토큰이 다시 폭락할 수 있다"* + *"진짜 펀더멘털과 manipulation 은 공존한다"*.
+
+### 사전 셋업 시그널 (가장 강력)
+
+- **거래소에서 대량 출금이 펌프 *시작 직전* 에 발생** — 인사이더의 매도 준비 단계
+- **출금 후 *수 주간 dormant*** — 매도 준비 완료 상태로 대기
+- **여러 지갑이 *동일 거래소에서 비슷한 시기에* 출금** — 단일 entity 의 분할 활동 의심
+
+### 두 번째 폭락 가능성 시그널
+
+- **1차 폭락 후 빠른 +500% 같은 V자 반등** — 인사이더가 *덤프 안 한* 상태에서 retail 만 청산된 경우
+- **1차 폭락의 원인이 *leverage unwind* 만** — 실제 매도 없으면 인사이더는 계속 보유 중
+- **신규 ATH 도달** — 인사이더에게 *real distribution* 기회
+- **감사 우려 미해결 + 가격 상승** — 시장이 위험을 무시하는 상태
+
+### 새벽 매도 패턴
+
+- **UTC 새벽 시간대 (한국 시간 오전) 에 동시 거래** — 아시아 retail 이 자거나 미국 마감 후
+- **여러 지갑이 *동시간* 에 매도** — 알고리즘 또는 코디네이트
+- **분할 매도 (single dump 아님)** — 슬리피지 최소화 + 신원 분산
+
+### 데리바티브 시그널
+
+- **선물 / 스팟 거래량 비율 50:1 이상** — 데리바티브 주도 가격 발견
+- **단일 거래소 (Binance) 의 거래량이 다른 모든 거래소 합보다 큼** — 가격 발견의 단일 venue 의존
+- **변동성 100%+ (4시간 기준)** — 정상 시장에서 거의 안 나오는 수치
+
+### "두 번째 기회" 함정
+
+- **"이번엔 진짜 바닥이다"** — 1차 폭락 후 바닥 매수 retail 의 함정
+- **+500% 같은 빠른 회복** — 인사이더가 만든 *exit liquidity 셋업*
+- **신규 catalyst 발표가 회복과 일치** — 1차에 못 빠진 인사이더의 마지막 기회
+
+### 파트너십 / 에코시스템 시그널
+
+- **다른 의혹 토큰과 *공식 파트너십*** — 생태계 차원의 위험 클러스터
+- **동일 VC 가 다수 의혹 토큰에 투자** — 인적 네트워크 연결
+- **동일 체인 (BNB Chain) 에 의혹 토큰 집중** — 체인 차원의 시스템 위험
+
+### 감사 무시 시그널
+
+- **감사 회사의 "black box" 경고가 미해결** — 트레이더에게 *위험 알림이 이미 있었다*
+- **거래소가 감사 경고에도 상장 유지** — 거래소 surveillance 부재
+- **가격이 감사 경고를 무시하고 상승** — 시장의 정보 비대칭 극단
+
+## 산업적 시사점
+
+1. **재발의 패턴화.** 다른 케이스들 (RAVE, LAB, M) 은 *한 번의* 사건. SIREN 은 *한 달 사이클로 3번*. ARIA 는 *9일 사이에 2번*. 사이클이 점점 *압축* 되는 양상. Manipulation 운영자가 더 효율적으로 진화하는지, retail 의 학습 실패가 더 빨라지는지, 또는 거래소의 후속 조치 부재가 재발을 가능하게 하는지 — 셋 모두 가능.
+2. **진짜 펀더멘털의 무기화.** ARIA 는 진짜 게임 · 진짜 사용자 · 진짜 펀딩이 있고 동시에 manipulation 셋업도 있음. *가장 효과적인 manipulation 은 진짜 펀더멘털 위에 셋업된다* — 트레이더에게 가장 어려운 평가 지점.
+3. **감사 무시의 시스템화.** Sentinacle 같은 audit firm 의 경고가 무시되는 패턴이 반복됨. COAI 의 *권한 미포기*, ARIA 의 *black box*, 둘 다 *사전 경고* 였으나 거래소도 retail 도 무시.
+4. **그룹화된 의혹의 가시화.** ARIA-MyShell 파트너십, LAB-SkyAI 지갑 연결, GPS-SHELL 마켓메이커 공유. 의혹이 *단일 토큰* 에 그치지 않고 *연결된 생태계* 로 확장. EmberCN · ZachXBT 의 forensic 이 발전하면서 *네트워크 단위* 추적이 가능해지고 있습니다.
+
+## 출처
+
+1. **EmberCN (Yu Jin)** — [X (Twitter)](https://x.com/EmberCN) — 2026.04.15 8 지갑 매도 추적 + Gate.io 3주 전 출금 공개
+2. **PANews** — ["ARIA tokens appear to have been dumped by market manipulators"](https://www.panewslab.com/en/articles/019d8ea7-6795-770c-9e3e-b0c4a507b868)
+3. **Bitcoin.com** — ["Second Flash Crash in a Week Sends ARIA Down 90%"](https://news.bitcoin.com/second-flash-crash-in-a-week-sends-aria-down-90/)
+4. **Cryptopolitan** — ["ARIA Token Plunges 85% Today"](https://www.cryptopolitan.com)
+5. **CryptoNewsZ** — ["$ARIA Sees 85% Crash After Token Dump"](https://www.cryptonewsz.com/aria-sees-crash-token-dump-panic-spreads/)
+6. **CoinMarketCap (CMC AI)** — [ARIA 가격 분석 + 청산 데이터](https://coinmarketcap.com/cmc-ai/aria-ai/latest-updates/)
+7. **Crypto Times** — ["AriaAI (ARIA) Crashes As Leverage Unwind Hits Token Hard"](https://www.cryptotimes.io/2026/04/09/ariaai-aria-crashes-as-leverage-unwind-hits-token-hard/)
+8. **Blockchain.news** — ["ARIA: Controller Dumps 45M Tokens"](https://blockchain.news/flashnews/aria-controller-dumps-45m-tokens)
+9. **BitcoinWorld** — ["ARIA Token Crash: Suspected Manipulators Trigger Devastating 91% Plunge"](https://bitcoinworld.co.in)
+10. **Sentinacle audit warnings** — ARIA 소스 코드 "black box" 지적 (2026년 4월 초)

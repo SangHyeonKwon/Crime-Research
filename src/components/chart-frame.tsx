@@ -13,7 +13,7 @@ const aspectClass: Record<Aspect, string> = {
 
 interface ChartFrameProps {
   kind: string
-  caption: string
+  caption: ReactNode
   source: string
   aspect?: Aspect
   children?: ReactNode
