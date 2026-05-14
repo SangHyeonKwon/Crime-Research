@@ -47,7 +47,7 @@ export function Home() {
   const filteredCases = useMemo(() => {
     if (activePatterns.length === 0) return cases
     return cases.filter((entry) =>
-      entry.frontmatter.patterns.some((p) => activePatterns.includes(p)),
+      activePatterns.every((ap) => entry.frontmatter.patterns.includes(ap)),
     )
   }, [activePatterns])
 
