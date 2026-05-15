@@ -64,9 +64,9 @@ export const sirenHoldersATH = [
 
 ## 개요
 
-SIREN 은 2026년 3월 한 달 동안 **동일한 펌프-덤프 사이클이 세 차례 반복**된 매우 드문 케이스입니다. 시총이 세 번 두 배가 됐다가 세 번 모두 풀 retracement 됐고, 매번 새로운 retail 이 유입되었습니다. ZachXBT · Bubblemaps · EmberCN 의 3중 폭로가 1차 붕괴 직전 동시에 발생했음에도 거래소의 개입은 없었습니다.
+SIREN 은 2026년 3월 한 달 동안 **동일한 펌프-덤프 사이클이 세 차례 반복**된 매우 드문 케이스다. 시총이 세 번 두 배까지 올랐다가 세 번 다 풀 retracement 됐고, 그때마다 새로운 retail 이 유입됐다. ZachXBT · Bubblemaps · EmberCN 의 3중 폭로가 1차 붕괴 직전 동시에 터졌는데도 거래소는 개입하지 않았다.
 
-ZachXBT 는 48.5% 클러스터 지갑들이 DWF Labs 연관 토큰들과 온체인 연결성을 보인다고 지목했으나, DWF Labs 는 관련 의혹을 일관되게 부인하고 있습니다. **본 페이지는 DWF Labs 가 manipulation 을 했다고 단정하지 않으며, 온체인 연결성은 정황 증거이지 직접 증거가 아니라는 점을 명시합니다.**
+ZachXBT 는 48.5% 클러스터 지갑들이 DWF Labs 연관 토큰들과 온체인 연결성을 보인다고 지목했으나, DWF Labs 는 관련 의혹을 일관되게 부인하고 있다. **본 페이지는 DWF Labs 가 manipulation 을 했다고 단정하지 않으며, 온체인 연결성은 정황 증거이지 직접 증거가 아니라는 점을 명시한다.**
 
 > "한 entity 가 약 50% SIREN 을 통제. 한 클러스터가 $10억 이상 보유. 이건 한 방향으로만 끝난다."
 > — Bubblemaps (1차 붕괴 수 시간 전 경고)
@@ -120,14 +120,14 @@ ZachXBT 가 RAVE 폭로 시 SIREN 을 "manipulation 의심 패턴 토큰" 리스
 
 ## 공급 구조 — 두 가지 추정
 
-SIREN 의 공급 집중도에 대해 두 분석가가 다른 추정을 제시했습니다. 클러스터 식별 방법론의 차이로 보입니다.
+SIREN 의 공급 집중도를 두 분석가가 서로 다르게 추정했다. 클러스터 식별 방법론이 달랐던 탓이다.
 
 | 분석가 | 추정 비율 | 식별 방법 | 보유 가치 (피크 시) |
 |--------|----------|----------|-----|
 | **Bubblemaps** | 약 48.5% | 직접적 자금 흐름 기반 (200+ 지갑, 후에 47 주소로 분산 배치) | 약 $1.5B |
 | **EmberCN** | 약 88.5% | 가스비 + 행동 패턴 기반 (Top 54 holders 중 52, 644M SIREN) | 약 $1.44B |
 
-두 추정 중 어느 쪽이 정확한지 단정할 수 없으나 **두 추정 모두 정상적 수준이 아닙니다**. 50% 만으로도 manipulation 에 충분한 supply control 입니다.
+어느 쪽이 정확한지는 단정할 수 없다. 다만 **두 추정 모두 정상적 수준이 아니다**. 50% 만으로도 manipulation 에 충분한 supply control 이다.
 
 <ChartFrame
   kind="SUPPLY DISTRIBUTION · AS OF ATH"
@@ -150,7 +150,7 @@ SIREN 의 공급 집중도에 대해 두 분석가가 다른 추정을 제시했
 
 ### 24시간 내 484M 분배 — 자체 인덱싱 결과
 
-본 페이지는 SIREN 컨트랙트 (`0x997A…18e1`) 의 transfer 이벤트를 Dune 으로 자체 인덱싱했습니다 (`transfers_bnb.erc20` 기반). 결과:
+본 페이지는 SIREN 컨트랙트 (`0x997A…18e1`) 의 transfer 이벤트를 Dune 으로 자체 인덱싱했다 (`transfers_bnb.erc20` 기반). 결과는 다음과 같다.
 
 - **484,103,975 SIREN** (= 총 발행량 1B 가정 시 약 **48%**) 이 **2026-02-05 ~ 02-06 (24시간)** 안에 단일 distribution 컨트랙트 `0x2aa5…a351` 로 누적됨 (906건 receive 중 905건 = **99.99%** 가 단일 source 발)
 - 단일 source 는 또 다른 컨트랙트 `0xb1c5…6699` — **24시간 안에 905건의 일괄 송금**
@@ -159,11 +159,11 @@ SIREN 의 공급 집중도에 대해 두 분석가가 다른 추정을 제시했
 - Top 30 receivers 의 분배는 **2026-03-22 09:13 ~ 10:56 UTC (1시간 43분)** 에 집중. 각 2~5M SIREN 씩 받았고, 합산은 약 96M (484M 의 ~20%) — 나머지 80% 는 같은 25시간 안에 더 작은 지갑들에 분배
 - 두 컨트랙트 모두 **2022년 deploy** 된 재사용 인프라 (ETH · BUSD · USDC · CAKE 등 다중 토큰 처리 이력 보유) — Hedgey · Sablier 류 vesting / claim contract 로 추정
 
-본 분석은 EmberCN 의 *"vesting 에서 ~$1B 출금"* 정황 주장을 직접 측정 가능한 사실로 뒷받침합니다. 다만 **컨트랙트가 어느 vesting 서비스의 인스턴스인지는** BscScan source code verify 없이는 단정할 수 없습니다.
+EmberCN 의 *"vesting 에서 ~$1B 출금"* 정황 주장을 이 분석이 직접 측정 가능한 사실로 뒷받침한다. 다만 **그 컨트랙트가 어느 vesting 서비스의 인스턴스인지는** BscScan source code verify 없이 단정할 수 없다.
 
 ## 수법 분석 — 반복 사이클이 가능한 이유
 
-이 케이스의 핵심 특징은 **manipulation 이 한 번이 아니라 명확하게 세 번 반복**된 점입니다. CoinGecko 가 직접 시각화를 게시할 정도로 패턴이 명확했습니다.
+이 케이스의 핵심 특징은 **manipulation 이 한 번이 아니라 명확하게 세 번 반복**됐다는 데 있다. CoinGecko 가 직접 시각화를 게시할 만큼 패턴이 또렷했다.
 
 <ChartFrame
   kind="MARKET CAP · 3 CYCLES"
@@ -184,31 +184,31 @@ SIREN 의 공급 집중도에 대해 두 분석가가 다른 추정을 제시했
 
 ### 1단계 — 펀더멘털 setup
 
-SIREN 은 출시 직후 사실상 abandoned 상태로 들어갔습니다. 진짜 사용자나 제품 없이 *narrative + 마켓메이커 자금* 만으로 토큰이 유지된 상태. 이런 토큰은 거래량의 대부분이 인사이더 wallet 사이 wash 일 가능성이 높아 매집 비용이 시장 가격보다 훨씬 낮습니다.
+SIREN 은 출시 직후 사실상 abandoned 상태로 들어갔다. 진짜 사용자나 제품 없이 *narrative + 마켓메이커 자금* 만으로 버틴 토큰이다. 이런 토큰은 거래량의 대부분이 인사이더 wallet 사이 wash 일 공산이 커서 매집 비용이 시장 가격보다 훨씬 낮다.
 
 ### 2단계 — 사전 포지셔닝
 
-EmberCN 분석에 따르면 클러스터 48개 지갑이 2026년 3월 22일 *근처* 에 집중 매집했고, 나머지 4개 지갑은 2025년 6~7월부터 사전 포지셔닝되어 있었습니다. 평균 매집가 ~$0.045 — 어떤 가격에 던져도 사실상 무한대 수익 구간.
+EmberCN 분석에 따르면 클러스터 48개 지갑이 2026년 3월 22일 *근처* 에 집중 매집했고, 나머지 4개 지갑은 2025년 6~7월부터 미리 포지셔닝돼 있었다. 평균 매집가 ~$0.045 — 어떤 가격에 던져도 사실상 무한대 수익 구간이다.
 
 ### 3단계 — Short Squeeze (RAVE 와 동일 메커니즘)
 
-펌프 진행 중 Binance Futures · Bybit Futures 에 perp 가 상장되며 short 베이팅이 가능해졌습니다. 같은 시기 클러스터가 거래소로 대량 입금 → 트레이더들이 "덤프 임박" 시그널로 해석 → short 누적 → 갑작스러운 매수 압력 → 청산 캐스케이드. 피크 시점 청산: Binance $2.4M · Bybit $4.7M · 총 $7M+. Open Interest 피크 $105M.
+펌프 진행 중 Binance Futures · Bybit Futures 에 perp 가 상장되며 short 베이팅이 가능해졌다. 같은 시기 클러스터가 거래소로 대량 입금 → 트레이더들이 "덤프 임박" 시그널로 해석 → short 누적 → 갑작스러운 매수 압력 → 청산 캐스케이드. 피크 시점 청산은 Binance $2.4M · Bybit $4.7M · 총 $7M+. Open Interest 피크 $105M.
 
 ### 4단계 — Burn 의 역설
 
-26% 공급 burn 이 시행되어 circulating float 을 더 축소했습니다. 이미 인사이더가 대부분 보유한 상황에서의 burn 은 **manipulation 을 더 쉽게 만드는 효과** 만 갖습니다. burn 이 항상 호재가 아니라는 사례.
+26% 공급 burn 이 시행돼 circulating float 을 더 줄였다. 이미 인사이더가 대부분 들고 있는 상황에서 burn 은 **manipulation 을 더 쉽게 만드는 효과** 만 낸다. burn 이 항상 호재는 아니라는 사례다.
 
 ### 5단계 — 반복 (이게 가장 정교한 부분)
 
-1차 펌프 → 1차 덤프 (수익 실현) → 더 낮은 가격에서 같은 클러스터가 다시 매집 → 2차 펌프 → 2차 덤프 → 3차 반복. 매 사이클마다 retail 평균 매수가는 오르고 (덤프 때 손실), 인사이더 평균 매수가는 내려갑니다.
+1차 펌프 → 1차 덤프 (수익 실현) → 더 낮은 가격에서 같은 클러스터가 다시 매집 → 2차 펌프 → 2차 덤프 → 3차 반복. 사이클이 돌 때마다 retail 평균 매수가는 오르고 (덤프 때 손실), 인사이더 평균 매수가는 내려간다.
 
 ## DWF Labs 연결 — 가장 controversial 한 영역
 
-이 케이스의 가장 민감한 부분이며, 출처와 단정 범위를 명확히 구분해야 합니다.
+이 케이스에서 가장 민감한 부분이다. 출처와 단정 범위를 명확히 구분해야 한다.
 
 ### ZachXBT 의 발견 (사실 부분)
 
-2026년 3월 23일, ZachXBT 는 BSC 에서 48.5% SIREN 클러스터 지갑들을 그래프로 그리던 중 해당 주소들이 여러 obscure DWF 연관 토큰들(LADYS, RACA, TOMO 등) 과 온체인으로 연결되어 있음을 발견했다고 보고했습니다.
+2026년 3월 23일, ZachXBT 는 BSC 에서 48.5% SIREN 클러스터 지갑들을 그래프로 그리던 중 해당 주소들이 여러 obscure DWF 연관 토큰들(LADYS, RACA, TOMO 등) 과 온체인으로 엮여 있음을 발견했다고 보고했다.
 
 ### 공개된 사실
 
@@ -216,15 +216,15 @@ EmberCN 분석에 따르면 클러스터 48개 지갑이 2026년 3월 22일 *근
 - SIREN 에 strategic investment 진행한 적이 있음 (공개 정보)
 - BNB Chain 의 Meme Liquidity Support Plan 에서 SIREN 지원
 
-즉 *"DWF 가 SIREN 의 공식 마켓메이커이자 투자자"* 라는 사실 자체는 공개된 정보입니다.
+*"DWF 가 SIREN 의 공식 마켓메이커이자 투자자"* 라는 사실 자체는 공개된 정보다.
 
 ### DWF Labs 의 입장
 
-DWF Labs 는 SIREN 관련 manipulation 혐의를 부인했으며, 과거 다른 의혹들(LADYS 등)에 대해서도 일관되게 부인해왔습니다.
+DWF Labs 는 SIREN 관련 manipulation 혐의를 부인했으며, 과거 다른 의혹들(LADYS 등)도 일관되게 부인해왔다.
 
 ### 본 페이지의 단정 범위
 
-본 페이지는 **DWF Labs 가 manipulation 을 했다고 단정하지 않습니다**. ZachXBT 의 온체인 분석은 *48.5% 클러스터 지갑들이 DWF 연관 토큰 지갑들과 온체인 연결성을 보인다* 는 사실까지만 보여줍니다. 이 연결이 manipulation 의 직접 증거인지, 단순 마켓메이커 활동의 흔적인지는 off-chain 자료(마켓메이커 계약서, 내부 채팅 로그 등) 없이는 결론낼 수 없는 영역입니다.
+본 페이지는 **DWF Labs 가 manipulation 을 했다고 단정하지 않는다**. ZachXBT 의 온체인 분석은 *48.5% 클러스터 지갑들이 DWF 연관 토큰 지갑들과 온체인 연결성을 보인다* 는 사실까지만 보여준다. 이 연결이 manipulation 의 직접 증거인지 단순 마켓메이커 활동의 흔적인지는 off-chain 자료(마켓메이커 계약서, 내부 채팅 로그 등) 없이 결론낼 수 없는 영역이다.
 
 ## 데이터
 
@@ -258,7 +258,7 @@ DWF Labs 는 SIREN 관련 manipulation 혐의를 부인했으며, 과거 다른 
 | MEXC Futures | O |
 | **PancakeSwap (BSC)** | O — 메인 spot venue |
 
-BNB Chain 토큰이라 PancakeSwap 이 메인 spot. 바이낸스 spot 미상장 + perp 상장이라는 RAVE 와 동일한 *alpha-no-spot* 구조. PancakeSwap 의 얕은 풀 가격이 perp 의 mark price 인덱스로 들어가는 구조입니다.
+BNB Chain 토큰이라 PancakeSwap 이 메인 spot 이다. 바이낸스 spot 미상장 + perp 상장이라는 RAVE 와 같은 *alpha-no-spot* 구조다. PancakeSwap 의 얕은 풀 가격이 perp 의 mark price 인덱스로 들어간다.
 
 ### 청산 · 파생상품 메트릭
 
@@ -268,7 +268,7 @@ BNB Chain 토큰이라 PancakeSwap 이 메인 spot. 바이낸스 spot 미상장 
 
 ## 교훈 — 다음 비슷한 케이스를 식별하는 시그널
 
-SIREN 은 *"한 번 폭락 후 다시 들어가지 말라"* 의 가장 명확한 사례입니다.
+SIREN 은 *"한 번 폭락한 토큰에 다시 들어가지 말라"* 를 가장 또렷하게 보여주는 사례다.
 
 ### 반복 사이클 시그널
 
