@@ -60,14 +60,26 @@ pnpm new-case --slug=<slug> --title="<Title>"
 
 예: ARIA `src/content/cases/aria.mdx` 의 FUND FLOW · 8 WALLET CLUSTER 참고.
 
-### 6. 가드레일 자체 점검
+### 6. 한국어 톤 윤문 (humanize-korean 스킬 연계)
+
+mdx 본문이 AI 작성 톤 (번역투 · 기계적 병렬 · 영어 인용 과다 · 이모지/불릿 과다) 이면 `humanize-korean` 스킬로 윤문. **단, mdx 는 frontmatter + import + JSX + 표 혼재라 파일 통째로 넣으면 깨짐:**
+
+- **산문 단락만 발췌** → humanize-korean 적용 → 재삽입
+- frontmatter (YAML) · `import` 문 · `<Component />` JSX · 마크다운 표 · `<ChartFrame caption={<>...</>}>` 는 **윤문 대상에서 제외**
+- humanize-korean 의 핵심 원칙 ("의미 불변이 최상위 불문율") 이 우리 사실/수치/출처 보존과 일치 — 그래도 윤문 후 수치·주소·출처 무변경 *반드시* 재확인
+- 기술 영어 용어 (manipulation · vesting · EOA · hot wallet 등) 는 do-NOT list 로 보존되는지 확인
+
+호출: 본문 산문을 붙여넣고 "이 AI 글 자연스럽게 윤문해줘" 또는 `/humanize`.
+
+### 7. 가드레일 자체 점검
 
 - 단정형 표현 (`사기`, `scam`, `criminal`) → 의혹 표현 (`manipulation 의혹`, `alleged`)
 - 모든 allegations 항목에 `sourceUrl` 채움
 - 교훈 섹션 *생략 안 함*
 - 외부 이미지 hotlink 없음 (모두 `src/assets/cases/<slug>/` 로컬)
+- 윤문 후 사실/수치/출처 무변경 재확인 (humanize-korean 적용 시)
 
-### 7. 빌드 → push
+### 8. 빌드 → push
 
 ```bash
 pnpm build  # 통과 필수
