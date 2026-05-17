@@ -72,7 +72,7 @@ ChainOpera AI 플랫폼 공식 출시. 일일 활성 사용자 100만 명 보고
 Bitget 이 무료 에어드롭 캠페인 진행 (공급의 약 1.5%, 15M COAI). Binance Alpha Points 보유자에게도 별도 분배.
   </TimelineEvent>
   <TimelineEvent date="2025년 9월 25일 — 5개 venue 동시 상장">
-COAI 가 Binance Alpha · Bybit · Bitget · Gate · Aster(DEX) 에 같은 날 동시 상장. 상장 당일 perpetuals 거래량 $6B+ 기록, FDV 약 $4B 즉시 도달.
+COAI 가 Binance Alpha · Bybit · Bitget · Gate · Aster(DEX) 에 같은 날 동시 상장 (Binance 무기한 perp 도 운영 — 가격 차트로 확인). 상장 당일 perpetuals 거래량 $6B+ 기록, FDV 약 $4B 즉시 도달.
   </TimelineEvent>
   <TimelineEvent date="2025년 10월 — FDV 피크">
 FDV 피크 약 $18.57B 도달. 시총 약 $365M, circulating 19.67% (196.7M / 1B).
@@ -122,8 +122,8 @@ Binance spot 없이 Alpha + 다수 거래소 동시 상장이라는 구조는 RA
 
 본 페이지는 COAI 의 BSC 컨트랙트 transfer 이벤트를 Dune 으로 직접 인덱싱했다 (`transfers_bnb.erc20`). 외부에 보도된 "circulating 19.67%" 같은 수치를 *측정 가능한 사실*로 다시 확인한 결과:
 
-- **온체인 net balance 합 ≈ 10.0억 = 총 공급량 전량.** 별도 lock 컨트랙트로 차감되는 구조가 아니다. 외부의 "circulating 196.7M (19.67%)" 는 프로젝트 unlock 스케줄 기준 표기로 보이며, 실질적 거래 가능 물량의 협소함은 *공급 잠금*이 아니라 *지갑 집중*에서 나온다.
-- **Top 5 지갑이 79.70%, Top 10 이 93.16%, Top 50 이 99.44%.** 상위 5개가 각각 10~23% 의 라운드 단위 잔고(105M · 113.5M · 159.3M · 188.5M · 230.7M)를 직접 보관 중이다.
+- **공급이 상위 소수 지갑에 집중되어 있다.** 외부의 "circulating 196.7M (19.67%)" 는 프로젝트 unlock 스케줄 기준 표기로 보이며, 실질적 거래 가능 물량의 협소함은 그 스케줄이 아니라 *지갑 집중*에서 드러난다. 다만 상위 지갑 각각이 vesting·배포 컨트랙트인지 EOA 인지는 본 측정 범위 밖이다 (트레이더가 BscScan 에서 확인할 항목).
+- **Top 5 지갑이 79.70%, Top 10 이 93.16%, Top 50 이 99.44%.** 상위 5개 주소가 각각 공급의 10~23%(105M · 113.5M · 159.3M · 188.5M · 230.7M)를 보유한다.
 - 첫 온체인 활동은 **2025-09-22 09:52:10 UTC** — 9월 25일 거래소 상장 *3일 전*. 컨트랙트 배포와 초기 분배가 상장에 선행했다.
 
 <ChartFrame
@@ -135,7 +135,7 @@ Binance spot 없이 Alpha + 다수 거래소 동시 상장이라는 구조는 RA
     Top 5 = 79.70% · Top 10 = 93.16% · Top 50 = 99.44%.
     <br />
     <br />
-    온체인 net balance 합 = 총 공급량 전량 (별도 lock 차감 없음 — 집중도 자체가 시그널).
+    공급이 상위 소수 지갑에 집중 — 집중도 자체가 시그널 (지갑의 lock·EOA 성격은 본 측정 범위 밖).
   </>}
   source="자체 Dune 인덱싱 (transfers_bnb.erc20)"
   aspect="auto"
